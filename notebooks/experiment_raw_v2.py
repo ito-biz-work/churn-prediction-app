@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import StratifiedKFold, cross_validate, train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
@@ -109,7 +110,8 @@ preprocessor = ColumnTransformer(
 
 # %%
 # 全モデルでk分割交差検証を実施
-cv = StratifiedKFold(n_splits=5, random_state=42, shuffle=True)
+n_splits = 5
+cv = StratifiedKFold(n_splits=n_splits, random_state=42, shuffle=True)
 
 # モデルを辞書に格納
 models = {
@@ -148,8 +150,37 @@ for name, model in models.items():
 
 # 結果を一括表示
 result_all_df = pd.DataFrame(result_all)
+print(f"--- {n_splits}分割交差検証 ---")
 print(result_all_df)
 
 ## 3. テストデータの前処理～評価まで
+
+# %%
+# テスト
+# 一番スコアが良かったモデルを採用
+best_model_name = "RandomForest"
+best_model = models[best_model_name]
+
+# 再度パイプラインを構築
+final_pipe = Pipeline(
+    [
+        ("preprocessor", preprocessor),
+        ("classifier", best_model),
+    ]
+)
+
+# 訓練データ全体で学習
+final_pipe.fit(X_train, y_train)
+
+# テストデータで予測
+y_pred_classes = final_pipe.predict(X_test)
+y_pred_probs = final_pipe.predict_proba(X_test)[:, 1]
+
+final_acc = accuracy_score(y_test, y_pred_classes)
+final_auc = roc_auc_score(y_test, y_pred_probs)
+
+print(f"--- テストデータ検証 {best_model_name} ---")
+print(f"Accuracy: {final_acc:.2f}")
+print(f"AUC : {final_auc:.2f}")
 
 # %%
