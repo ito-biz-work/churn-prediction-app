@@ -73,8 +73,13 @@ synthetic_data[numeric_cols] = synthetic_data[numeric_cols].apply(
 print_quality(data, synthetic_data, metadata, epochs)
 
 # %%
+# shapeチェック
+print("data shape: ", data.shape)
+print("synthetic shape: ", synthetic_data.shape)
+
+# %%
 # 最小値チェック
-print(synthetic_data.min())
+print("min:\n", synthetic_data.min())
 
 # %%
 # 元データとの重複チェック
