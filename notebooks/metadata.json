@@ -1,0 +1,72 @@
+{
+  "tables": {
+    "table": {
+      "columns": {
+        "state": {
+          "pii": true,
+          "sdtype": "administrative_unit"
+        },
+        "account_length": {
+          "sdtype": "numerical"
+        },
+        "area_code": {
+          "sdtype": "categorical"
+        },
+        "international_plan": {
+          "sdtype": "categorical"
+        },
+        "voice_mail_plan": {
+          "pii": true,
+          "sdtype": "email"
+        },
+        "number_vmail_messages": {
+          "sdtype": "numerical"
+        },
+        "total_day_minutes": {
+          "sdtype": "numerical"
+        },
+        "total_day_calls": {
+          "sdtype": "numerical"
+        },
+        "total_day_charge": {
+          "sdtype": "numerical"
+        },
+        "total_eve_minutes": {
+          "sdtype": "numerical"
+        },
+        "total_eve_calls": {
+          "sdtype": "numerical"
+        },
+        "total_eve_charge": {
+          "sdtype": "numerical"
+        },
+        "total_night_minutes": {
+          "sdtype": "numerical"
+        },
+        "total_night_calls": {
+          "sdtype": "numerical"
+        },
+        "total_night_charge": {
+          "sdtype": "numerical"
+        },
+        "total_intl_minutes": {
+          "sdtype": "numerical"
+        },
+        "total_intl_calls": {
+          "sdtype": "numerical"
+        },
+        "total_intl_charge": {
+          "sdtype": "numerical"
+        },
+        "number_customer_service_calls": {
+          "sdtype": "categorical"
+        },
+        "churn": {
+          "sdtype": "categorical"
+        }
+      }
+    }
+  },
+  "relationships": [],
+  "METADATA_SPEC_VERSION": "V1"
+}
