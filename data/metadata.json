@@ -3,8 +3,7 @@
     "table": {
       "columns": {
         "state": {
-          "pii": true,
-          "sdtype": "administrative_unit"
+          "sdtype": "categorical"
         },
         "account_length": {
           "sdtype": "numerical"
@@ -16,8 +15,7 @@
           "sdtype": "categorical"
         },
         "voice_mail_plan": {
-          "pii": true,
-          "sdtype": "email"
+          "sdtype": "categorical"
         },
         "number_vmail_messages": {
           "sdtype": "numerical"
@@ -59,7 +57,7 @@
           "sdtype": "numerical"
         },
         "number_customer_service_calls": {
-          "sdtype": "categorical"
+          "sdtype": "numerical"
         },
         "churn": {
           "sdtype": "categorical"
