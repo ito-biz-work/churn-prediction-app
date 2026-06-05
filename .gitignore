@@ -23,6 +23,7 @@ wheels/
 
 # Local directories
 data/raw/
+*.db
 
 # Model files
 *.pkl
