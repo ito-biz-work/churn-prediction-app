@@ -182,6 +182,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "faker" },
     { name = "sdv" },
 ]
 
@@ -199,7 +200,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "sdv", specifier = ">=1.32.1" }]
+dev = [
+    { name = "faker", specifier = ">=40.21.0" },
+    { name = "sdv", specifier = ">=1.32.1" },
+]
 
 [[package]]
 name = "click"
