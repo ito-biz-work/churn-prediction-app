@@ -6,11 +6,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from config.settings import ML_MODEL_DIR, SYNTHETIC_DATA_DIR
+from config.settings import MODEL_JOBLIB, TRAIN_SYNTHETIC_CSV
 
 # パス設定
-DATA_PATH = SYNTHETIC_DATA_DIR / "train.csv"
-MODEL_PATH = ML_MODEL_DIR / "model.joblib"
+DATA_PATH = TRAIN_SYNTHETIC_CSV
+MODEL_PATH = MODEL_JOBLIB
 
 
 def get_preprocessor():

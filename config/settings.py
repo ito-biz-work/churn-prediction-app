@@ -11,3 +11,11 @@ ML_MODEL_DIR = BASE_DIR / "backend" / "app" / "ml_models"
 
 # ファイルのパス
 METADATA_JSON = DATA_DIR / "metadata.json"
+
+TRAIN_RAW_CSV = RAW_DATA_DIR / "train.csv"
+TRAIN_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "train.csv"
+
+TEST_RAW_CSV = RAW_DATA_DIR / "test.csv"
+TEST_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "test.csv"
+
+MODEL_JOBLIB = ML_MODEL_DIR / "model.joblib"

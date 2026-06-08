@@ -1,11 +1,11 @@
 from faker import Faker
 
-from config.settings import METADATA_JSON, RAW_DATA_DIR, SYNTHETIC_DATA_DIR
+from config.settings import METADATA_JSON, TEST_RAW_CSV, TEST_SYNTHETIC_CSV
 from scripts.data_utils.generator_core import run_sdv_generation
 
 # パス設定
-INPUT_PATH = RAW_DATA_DIR / "test.csv"
-OUTPUT_PATH = SYNTHETIC_DATA_DIR / "app.csv"
+INPUT_PATH = TEST_RAW_CSV
+OUTPUT_PATH = TEST_SYNTHETIC_CSV
 
 faker_jp = Faker("ja_JP")
 
