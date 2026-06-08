@@ -8,11 +8,11 @@ from backend.app.schemas import CustomerListOutput, PredictionInput, PredictionO
 router = APIRouter()
 
 
-@router.post("/predict", response_model=PredictionOutput)
+@router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
 def predict(input_data: PredictionInput):
     return get_prediction(input_data)
 
 
-@router.get("/customers", response_model=list[CustomerListOutput])
+@router.get("/customers", response_model=list[CustomerListOutput], tags=["Customers"])
 def list_customers(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
     return get_customers(db, skip=skip, limit=limit)
