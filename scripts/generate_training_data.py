@@ -1,9 +1,9 @@
-from config.settings import METADATA_JSON, RAW_DATA_DIR, SYNTHETIC_DATA_DIR
+from config.settings import METADATA_JSON, TRAIN_RAW_CSV, TRAIN_SYNTHETIC_CSV
 from scripts.data_utils.generator_core import run_sdv_generation
 
 # パス設定
-INPUT_PATH = RAW_DATA_DIR / "train.csv"
-OUTPUT_PATH = SYNTHETIC_DATA_DIR / "train.csv"
+INPUT_PATH = TRAIN_RAW_CSV
+OUTPUT_PATH = TRAIN_SYNTHETIC_CSV
 
 
 def main():
