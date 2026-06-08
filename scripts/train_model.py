@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import category_encoders as ce
 import joblib
 import pandas as pd
@@ -8,10 +6,11 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
+from config.settings import ML_MODEL_DIR, SYNTHETIC_DATA_DIR
+
 # パス設定
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = BASE_DIR / "data" / "synthetic" / "train.csv"
-MODEL_PATH = BASE_DIR / "backend" / "app" / "models" / "model.pkl"
+DATA_PATH = SYNTHETIC_DATA_DIR / "train.csv"
+MODEL_PATH = ML_MODEL_DIR / "model.joblib"
 
 
 def get_preprocessor():
@@ -49,12 +48,12 @@ def train_and_save_model():
     )
 
     # 学習
-    print("Training model...")
+    print("学習中...")
     pipe.fit(X, y)
 
     # 保存
     joblib.dump(pipe, MODEL_PATH)
-    print(f"Model saved to {MODEL_PATH}")
+    print(f"モデルを保存しました: {MODEL_PATH}")
 
 
 if __name__ == "__main__":

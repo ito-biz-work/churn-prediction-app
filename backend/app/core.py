@@ -1,9 +1,11 @@
 import joblib
 import pandas as pd
 
-from .schemas import PredictionInput
+from backend.app.schemas import PredictionInput
+from config.settings import ML_MODEL_DIR
 
-MODEL_PATH = "backend/app/models/model.pkl"
+# パス設定
+MODEL_PATH = ML_MODEL_DIR / "model.joblib"
 
 # サーバー起動時に1回だけモデルをロード
 model = joblib.load(MODEL_PATH)
