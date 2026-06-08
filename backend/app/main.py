@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.app.app import router as api_router
+from backend.app.routers import router as api_router
 
 app = FastAPI(
     title="Churn Prediction API",
