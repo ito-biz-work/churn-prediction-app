@@ -55,3 +55,15 @@ class PredictionOutput(BaseModel):
     churn_probability: float = Field(
         ..., ge=0, le=1, description="解約予測確率（0.0〜1.0）"
     )
+
+
+class CustomerListOutput(BaseModel):
+    id: int
+    customer_name: str
+    customer_code: str
+    state: str
+    area_code: str
+    account_length: int
+
+    class Config:
+        from_attributes = True
