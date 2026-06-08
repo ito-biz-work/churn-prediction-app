@@ -1,10 +1,11 @@
 from faker import Faker
 
-from config.settings import METADATA_JSON, SYNTHETIC_DATA_DIR, TRAIN_CSV
+from config.settings import METADATA_JSON, RAW_DATA_DIR, SYNTHETIC_DATA_DIR
 from scripts.data_utils.generator_core import run_sdv_generation
 
 # パス設定
-OUTPUT_CSV = SYNTHETIC_DATA_DIR / "app.csv"
+INPUT_PATH = RAW_DATA_DIR / "test.csv"
+OUTPUT_PATH = SYNTHETIC_DATA_DIR / "app.csv"
 
 faker_jp = Faker("ja_JP")
 
@@ -24,15 +25,15 @@ def add_dummy_info(df):
 def main():
     # 共通の生成処理の呼び出し
     print("疑似データを生成中...")
-    synthetic_data = run_sdv_generation(TRAIN_CSV, METADATA_JSON)
+    synthetic_data = run_sdv_generation(INPUT_PATH, METADATA_JSON, is_app=True)
 
-    # 2. アプリ用データの加工
+    # アプリ用データの加工
     print("ダミー情報を付与中...")
     app_data = add_dummy_info(synthetic_data)
 
     # 保存
-    app_data.to_csv(OUTPUT_CSV, index=False)
-    print(f"アプリ表示用データの生成が完了しました: {OUTPUT_CSV}")
+    app_data.to_csv(OUTPUT_PATH, index=False)
+    print(f"アプリ表示用データの生成が完了しました: {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
