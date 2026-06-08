@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from config.settings import BASE_DIR
+from config.settings import DATA_DIR
 
 # データベースファイルのパス
-DB_PATH = BASE_DIR / "data" / "churn.db"
+DB_PATH = DATA_DIR / "churn.db"
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 # DBとの接続設定

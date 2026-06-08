@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from .core import get_prediction
-from .schemas import PredictionInput, PredictionOutput
+from backend.app.core import get_prediction
+from backend.app.schemas import PredictionInput, PredictionOutput
 
 router = APIRouter()
 
