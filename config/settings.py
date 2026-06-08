@@ -19,3 +19,7 @@ TEST_RAW_CSV = RAW_DATA_DIR / "test.csv"
 TEST_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "test.csv"
 
 MODEL_JOBLIB = ML_MODEL_DIR / "model.joblib"
+
+# DB設定
+DATABASE_NAME = "churn.db"
+TABLE_NAME = "customer_metrics"

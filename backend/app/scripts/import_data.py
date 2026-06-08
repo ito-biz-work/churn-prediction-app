@@ -2,7 +2,7 @@ import pandas as pd
 
 from backend.app.database import engine
 from backend.app.models.customer_metrics import Base
-from config.settings import TEST_SYNTHETIC_CSV
+from config.settings import TABLE_NAME, TEST_SYNTHETIC_CSV
 
 
 def import_csv_to_db():
@@ -14,7 +14,7 @@ def import_csv_to_db():
 
     # 書き込み
     # Pandasのindexを除外し、DB側のidカラムを自動採番
-    df.to_sql("customer_metrics", con=engine, if_exists="replace", index=False)
+    df.to_sql(TABLE_NAME, con=engine, if_exists="replace", index=False)
 
     print(f"成功: {len(df)} 件のデータをデータベースにインポートしました。")
 
