@@ -25,9 +25,9 @@ def add_dummy_info(df):
 def main():
     # 共通の生成処理の呼び出し
     print("疑似データを生成中...")
-    synthetic_data = run_sdv_generation(INPUT_PATH, METADATA_JSON)
+    synthetic_data = run_sdv_generation(INPUT_PATH, METADATA_JSON, is_app=True)
 
-    # 2. アプリ用データの加工
+    # アプリ用データの加工
     print("ダミー情報を付与中...")
     app_data = add_dummy_info(synthetic_data)
 
