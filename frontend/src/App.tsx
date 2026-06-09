@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Box, Flex, Heading, Text } from "@chakra-ui/react"; // 必要なコンポーネントをインポート
 import CustomerList, { type Customer } from './components/CustomerList';
 import PredictionPanel from './components/PredictionPanel';
 
@@ -6,29 +7,31 @@ function App() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
+    <Flex direction="column" minH="100vh" bg="gray.50">
       {/* ヘッダー */}
-      <header className="bg-slate-800 p-4 shadow-md">
-        <h1 className="text-xl font-bold text-white tracking-wide">
+      <Box as="header" bg="gray.800" p={4} shadow="md">
+        <Heading size="md" color="white" letterSpacing="wide">
           顧客分析ダッシュボード
-        </h1>
-      </header>
+        </Heading>
+      </Box>
 
       {/* メインコンテンツ */}
-      <main className="grow p-6 flex gap-6">
-        <div className="w-1/2">
+      <Flex as="main" flex="1" p={6} gap={6}>
+        <Box w="50%">
           <CustomerList onSelect={setSelectedCustomer} />
-        </div>
-        <div className="w-1/2">
+        </Box>
+        <Box w="50%">
           <PredictionPanel customer={selectedCustomer} />
-        </div>
-      </main>
+        </Box>
+      </Flex>
 
       {/* フッター */}
-      <footer className="bg-slate-200 border-t border-slate-300 p-4 text-center text-sm text-slate-600">
-        © 2026 Customer Insights System
-      </footer>
-    </div>
+      <Box as="footer" bg="gray.200" borderTop="1px" borderColor="gray.300" p={4} textAlign="center">
+        <Text fontSize="sm" color="gray.600">
+          © 2026 Customer Insights System
+        </Text>
+      </Box>
+    </Flex>
   );
 }
 
