@@ -12,12 +12,13 @@ faker_jp = Faker("ja_JP")
 
 def add_dummy_info(df):
     num_row = len(df)
+    df["id"] = range(1, num_row + 1)
     df["customer_code"] = [f"USR-{10000 + i}" for i in range(num_row)]
     df["customer_name"] = [faker_jp.name() for _ in range(num_row)]
 
-    # codeと氏名を左端に配置
-    cols = ["customer_code", "customer_name"] + [
-        c for c in df.columns if c not in ["customer_code", "customer_name"]
+    # 追加列を左端に配置
+    cols = ["id", "customer_code", "customer_name"] + [
+        c for c in df.columns if c not in ["id", "customer_code", "customer_name"]
     ]
     return df[cols]  # 新しいDFを返す
 
@@ -25,7 +26,7 @@ def add_dummy_info(df):
 def main():
     # 共通の生成処理の呼び出し
     print("疑似データを生成中...")
-    synthetic_data = run_sdv_generation(INPUT_PATH, METADATA_JSON, is_app=True)
+    synthetic_data = run_sdv_generation(INPUT_PATH, METADATA_JSON, is_training=False)
 
     # アプリ用データの加工
     print("ダミー情報を付与中...")

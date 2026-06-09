@@ -1,14 +1,13 @@
 import joblib
 import pandas as pd
+from sqlalchemy.orm import Session
 
+from backend.app.models.customer_metrics import CustomerMetrics
 from backend.app.schemas import PredictionInput
-from config.settings import ML_MODEL_DIR
-
-# パス設定
-MODEL_PATH = ML_MODEL_DIR / "model.joblib"
+from config.settings import MODEL_JOBLIB
 
 # サーバー起動時に1回だけモデルをロード
-model = joblib.load(MODEL_PATH)
+model = joblib.load(MODEL_JOBLIB)
 
 
 def get_prediction(input_data: PredictionInput):
@@ -27,3 +26,7 @@ def get_prediction(input_data: PredictionInput):
         "churn_prediction": prediction,
         "churn_probability": probability,
     }
+
+
+def get_customers(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(CustomerMetrics).offset(skip).limit(limit).all()
