@@ -1,10 +1,11 @@
 from sqlalchemy import Column, Float, Integer, String
 
 from backend.app.database import Base
+from config.settings import TABLE_NAME
 
 
 class CustomerMetrics(Base):
-    __tablename__ = "customer_metrics"
+    __tablename__ = TABLE_NAME
 
     # データベース用のユニークID（主キー）
     id = Column(Integer, primary_key=True, index=True)
