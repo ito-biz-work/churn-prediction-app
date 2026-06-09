@@ -9,7 +9,7 @@ function App() {
   return (
     <Flex direction="column" minH="100vh" bg="gray.50">
       {/* ヘッダー */}
-      <Box as="header" bg="gray.800" p={4} shadow="md">
+      <Box as="header" bg="blue.900" p={4} shadow="md">
         <Heading size="md" color="white" letterSpacing="wide">
           顧客分析ダッシュボード
         </Heading>

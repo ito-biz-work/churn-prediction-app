@@ -52,7 +52,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
             <GridItem>{customer.code}</GridItem>
             <GridItem>
               <Button 
-                colorScheme="blue" 
+                colorPalette="blue" 
                 size="sm" 
                 shadow="sm"
                 onClick={() => onSelect(customer)}
