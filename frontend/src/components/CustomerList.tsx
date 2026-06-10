@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Heading,
@@ -12,33 +12,47 @@ import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 export type Customer = {
   id: number;
-  name: string;
-  code: string;
+  customerName: string;
+  customerCode: string;
 };
-
-// 仮データ
-const customers: Customer[] = [
-  { id: 1, name: "田中 太郎", code: "CUST001" },
-  { id: 2, name: "佐藤 花子", code: "CUST002" },
-  { id: 3, name: "鈴木 一郎", code: "CUST003" },
-  { id: 4, name: "高橋 誠", code: "CUST004" },
-  { id: 5, name: "伊藤 由美", code: "CUST005" },
-];
 
 interface CustomerListProps {
   onSelect: (customer: Customer) => void;
 }
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 export default function CustomerList({ onSelect }: CustomerListProps) {
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  // 顧客情報取得
+  // 初回レンダリング時のみ実行
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/customers");
+        const data = await response.json();
+        setCustomers(data);
+      } catch (error) {
+        console.log("データ取得エラー:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
 
   // ページに応じたデータ切り出し
   const paginatedCustomers = customers.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE,
   );
+
+  if (loading) return <Box>読み込み中...</Box>;
 
   return (
     <Box
@@ -73,8 +87,8 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
             {paginatedCustomers.map((customer) => (
               <Table.Row key={customer.id}>
                 <Table.Cell>{customer.id}</Table.Cell>
-                <Table.Cell>{customer.name}</Table.Cell>
-                <Table.Cell>{customer.code}</Table.Cell>
+                <Table.Cell>{customer.customerName}</Table.Cell>
+                <Table.Cell>{customer.customerCode}</Table.Cell>
                 <Table.Cell textAlign="end">
                   <Button
                     colorPalette="cyan"
