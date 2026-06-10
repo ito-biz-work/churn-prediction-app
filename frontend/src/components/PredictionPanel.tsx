@@ -1,4 +1,4 @@
-import { Box, Heading, Text, SimpleGrid } from "@chakra-ui/react";
+import { Box, Heading, Text, DataList } from "@chakra-ui/react";
 
 // 顧客データの型を定義
 interface Customer {
@@ -43,19 +43,24 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
           </Text>
         </Box>
         <Box p={4}>
-          <SimpleGrid columns={2} gap={4}>
-            <Text color="fg.muted" whiteSpace="nowrap">氏名:</Text>
-            <Text>田中 太郎</Text>
-
-            <Text color="fg.muted" whiteSpace="nowrap">居住州:</Text>
-            <Text>NJ</Text>
-
-            <Text color="fg.muted" whiteSpace="nowrap">エリアコード:</Text>
-            <Text>area_code_415</Text>
-
-            <Text color="fg.muted" whiteSpace="nowrap">契約期間:</Text>
-            <Text>55ヶ月</Text>
-          </SimpleGrid>
+          <DataList.Root orientation="horizontal">
+            <DataList.Item>
+              <DataList.ItemLabel>氏名</DataList.ItemLabel>
+              <DataList.ItemValue>田中 太郎</DataList.ItemValue>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.ItemLabel>居住州</DataList.ItemLabel>
+              <DataList.ItemValue>NJ</DataList.ItemValue>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.ItemLabel>エリアコード</DataList.ItemLabel>
+              <DataList.ItemValue>area_code_415</DataList.ItemValue>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.ItemLabel>契約期間</DataList.ItemLabel>
+              <DataList.ItemValue>55ヶ月</DataList.ItemValue>
+            </DataList.Item>
+          </DataList.Root>
         </Box>
       </Box>
     </Box>
