@@ -19,16 +19,16 @@ interface CustomerListProps {
 
 export default function CustomerList({ onSelect }: CustomerListProps) {
   return (
-    <Box bg="white" p={6} shadow="md" borderWidth="1px" borderColor="gray.200" borderRadius="lg">
+    <Box bg="bg.panel" p={6} shadow="md" borderWidth="1px" borderColor="border" borderRadius="lg">
       <Heading size="lg" mb={4}>顧客一覧</Heading>
       
-      <Box borderWidth="1px" borderColor="gray.200" borderRadius="md" overflow="hidden">
+      <Box borderWidth="1px" borderColor="border" borderRadius="md" overflow="hidden">
         <Table.Root size="md" variant="outline">
           <Table.Header>
             <Table.Row>
-              <Table.ColumnHeader>ID</Table.ColumnHeader>
-              <Table.ColumnHeader>氏名</Table.ColumnHeader>
-              <Table.ColumnHeader>顧客コード</Table.ColumnHeader>
+              <Table.ColumnHeader color="fg.muted">ID</Table.ColumnHeader>
+              <Table.ColumnHeader color="fg.muted">氏名</Table.ColumnHeader>
+              <Table.ColumnHeader color="fg.muted">顧客コード</Table.ColumnHeader>
               <Table.ColumnHeader />
             </Table.Row>
           </Table.Header>
@@ -40,12 +40,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
                 <Table.Cell>{customer.name}</Table.Cell>
                 <Table.Cell>{customer.code}</Table.Cell>
                 <Table.Cell textAlign="end">
-                  <Button 
-                    colorPalette="blue" 
-                    size="sm" 
-                    shadow="sm"
-                    onClick={() => onSelect(customer)}
-                  >
+                  <Button colorPalette="cyan" size="sm" shadow="sm" onClick={() => onSelect(customer)}>
                     実行
                   </Button>
                 </Table.Cell>
