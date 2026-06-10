@@ -11,6 +11,13 @@ interface PredictionPanelProps {
   customer: Customer | null;
 }
 
+const customerInfo = [
+  { label: "氏名", value: "田中 太郎" },
+  { label: "居住州", value: "NJ" },
+  { label: "エリアコード", value: "area_code_415" },
+  { label: "契約期間", value: "55ヶ月" },
+];
+
 export default function PredictionPanel({ customer }: PredictionPanelProps) {
   // 顧客が選択されていない場合の表示
   if (!customer) {
@@ -29,7 +36,7 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
       
       {/* 退会確率 */}
       <Box p={6} bg="bg.subtle" borderRadius="md" borderWidth="1px" borderColor="border" mb={6}>
-        <Text fontSize="sm" fontWeight="semibold" color="fg.muted" textTransform="uppercase" letterSpacing="wide" mb={1}>
+        <Text fontSize="sm" fontWeight="semibold" color="fg.muted" letterSpacing="wide" mb={1}>
           退会確率
         </Text>
         <Text fontSize="4xl" fontWeight="extrabold" color="red.solid">85%</Text>
@@ -37,29 +44,19 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
 
       {/* 顧客属性情報 */}
       <Box borderWidth="1px" borderColor="border" borderRadius="md" overflow="hidden">
-        <Box bg="bg.subtle" p={3} borderBottomWidth="1px" borderColor="border">
+        <Box bg="bg.muted" p={3} borderBottomWidth="1px" borderColor="border">
           <Text fontWeight="semibold" fontSize="sm" color="fg.muted" letterSpacing="wide">
             顧客属性情報
           </Text>
         </Box>
         <Box p={4}>
           <DataList.Root orientation="horizontal">
-            <DataList.Item>
-              <DataList.ItemLabel>氏名</DataList.ItemLabel>
-              <DataList.ItemValue>田中 太郎</DataList.ItemValue>
-            </DataList.Item>
-            <DataList.Item>
-              <DataList.ItemLabel>居住州</DataList.ItemLabel>
-              <DataList.ItemValue>NJ</DataList.ItemValue>
-            </DataList.Item>
-            <DataList.Item>
-              <DataList.ItemLabel>エリアコード</DataList.ItemLabel>
-              <DataList.ItemValue>area_code_415</DataList.ItemValue>
-            </DataList.Item>
-            <DataList.Item>
-              <DataList.ItemLabel>契約期間</DataList.ItemLabel>
-              <DataList.ItemValue>55ヶ月</DataList.ItemValue>
-            </DataList.Item>
+            {customerInfo.map((item) => (
+              <DataList.Item key={item.label}>
+                <DataList.ItemLabel>{item.label}</DataList.ItemLabel>
+                <DataList.ItemValue>{item.value}</DataList.ItemValue>
+              </DataList.Item>
+            ))}
           </DataList.Root>
         </Box>
       </Box>
