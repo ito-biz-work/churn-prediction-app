@@ -1,4 +1,4 @@
-import { Box, Heading, Button, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Heading, Button, Table } from "@chakra-ui/react";
 
 export type Customer = {
   id: number;
@@ -13,8 +13,6 @@ const customers: Customer[] = [
   { id: 3, name: "鈴木 一郎", code: "CUST003" },
 ];
 
-
-// 型を定義
 interface CustomerListProps {
   onSelect: (customer: Customer) => void;
 }
@@ -25,43 +23,36 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
       <Heading size="lg" mb={4}>顧客一覧</Heading>
       
       <Box borderWidth="1px" borderColor="gray.200" borderRadius="md" overflow="hidden">
-        {/* ヘッダー */}
-        <Grid templateColumns="repeat(4, 1fr)" gap={2} p={3} bg="gray.50" borderBottomWidth="1px" borderColor="gray.200" fontWeight="semibold" fontSize="sm" color="gray.600" textTransform="uppercase" letterSpacing="wider">
-          <GridItem>ID</GridItem>
-          <GridItem>氏名</GridItem>
-          <GridItem>顧客コード</GridItem>
-          <GridItem />
-        </Grid>
+        <Table.Root size="md" variant="outline">
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeader>ID</Table.ColumnHeader>
+              <Table.ColumnHeader>氏名</Table.ColumnHeader>
+              <Table.ColumnHeader>顧客コード</Table.ColumnHeader>
+              <Table.ColumnHeader />
+            </Table.Row>
+          </Table.Header>
 
-        {/* 顧客リスト */}
-        {customers.map((customer) => (
-          <Grid 
-            key={customer.id} 
-            templateColumns="repeat(4, 1fr)" 
-            gap={2} 
-            p={3} 
-            borderBottomWidth="1px" 
-            borderColor="gray.100" 
-            alignItems="center"
-            _last={{ borderBottomWidth: 0 }}
-            fontSize="md" 
-            color="gray.900"
-          >
-            <GridItem>{customer.id}</GridItem>
-            <GridItem>{customer.name}</GridItem>
-            <GridItem>{customer.code}</GridItem>
-            <GridItem>
-              <Button 
-                colorPalette="blue" 
-                size="sm" 
-                shadow="sm"
-                onClick={() => onSelect(customer)}
-              >
-                実行
-              </Button>
-            </GridItem>
-          </Grid>
-        ))}
+          <Table.Body>
+            {customers.map((customer) => (
+              <Table.Row key={customer.id}>
+                <Table.Cell>{customer.id}</Table.Cell>
+                <Table.Cell>{customer.name}</Table.Cell>
+                <Table.Cell>{customer.code}</Table.Cell>
+                <Table.Cell textAlign="end">
+                  <Button 
+                    colorPalette="blue" 
+                    size="sm" 
+                    shadow="sm"
+                    onClick={() => onSelect(customer)}
+                  >
+                    実行
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
       </Box>
     </Box>
   );
