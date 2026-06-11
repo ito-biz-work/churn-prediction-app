@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import category_encoders as ce
 import joblib
 import pandas as pd
@@ -51,9 +53,15 @@ def train_and_save_model():
     print("学習中...")
     pipe.fit(X, y)
 
+    # 保存先のパスを取得
+    model_path = Path(MODEL_PATH)
+
+    # 親ディレクトリが存在しなければ作成する
+    model_path.parent.mkdir(parents=True, exist_ok=True)
+
     # 保存
-    joblib.dump(pipe, MODEL_PATH)
-    print(f"モデルを保存しました: {MODEL_PATH}")
+    joblib.dump(pipe, model_path)
+    print(f"モデルを保存しました: {model_path}")
 
 
 if __name__ == "__main__":
