@@ -23,19 +23,24 @@ interface CustomerListProps {
 const PAGE_SIZE = 5;
 
 export default function CustomerList({ onSelect }: CustomerListProps) {
+  const [totalCount, setTotalCount] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
   // 顧客情報取得
-  // 初回レンダリング時のみ実行
+  // ページ更新時のみ実行
   useEffect(() => {
     const fetchCustomers = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/v1/customers");
+        const skip = (page - 1) * PAGE_SIZE;
+        const response = await fetch(
+          `http://localhost:8000/api/v1/customers?skip=${skip}&limit=${PAGE_SIZE}`,
+        );
         const data = await response.json();
-        setCustomers(data);
+        setTotalCount(data.totalCount);
+        setCustomers(data.items);
       } catch (error) {
         console.log("データ取得エラー:", error);
       } finally {
@@ -44,13 +49,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
     };
 
     fetchCustomers();
-  }, []);
-
-  // ページに応じたデータ切り出し
-  const paginatedCustomers = customers.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE,
-  );
+  }, [page]);
 
   if (loading) return <Box>読み込み中...</Box>;
 
@@ -84,7 +83,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {paginatedCustomers.map((customer) => (
+            {customers.map((customer) => (
               <Table.Row key={customer.id}>
                 <Table.Cell>{customer.id}</Table.Cell>
                 <Table.Cell>{customer.customerName}</Table.Cell>
@@ -107,7 +106,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
 
       {/* Pagination */}
       <Pagination.Root
-        count={customers.length}
+        count={totalCount}
         pageSize={PAGE_SIZE}
         page={page}
         onPageChange={(e) => setPage(e.page)}
