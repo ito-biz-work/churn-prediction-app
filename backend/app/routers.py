@@ -14,5 +14,5 @@ def predict(input_data: PredictionInput):
 
 
 @router.get("/customers", response_model=CustomerListOutput, tags=["Customers"])
-def list_customers(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
+def list_customers(db: Session = Depends(get_db), skip: int = 0, limit: int = 5):
     return get_customers(db, skip=skip, limit=limit)

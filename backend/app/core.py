@@ -28,7 +28,7 @@ def get_prediction(input_data: PredictionInput):
     }
 
 
-def get_customers(db: Session, skip: int = 0, limit: int = 10):
+def get_customers(db: Session, skip: int = 0, limit: int = 5):
     total_count = db.query(CustomerMetrics).count()
     target_customers = db.query(CustomerMetrics).offset(skip).limit(limit).all()
     return {"total_count": total_count, "items": target_customers}

@@ -62,9 +62,6 @@ class CustomerItem(BaseModel):
     id: int
     customer_name: str
     customer_code: str
-    state: str
-    area_code: str
-    account_length: int
 
     model_config = ConfigDict(
         from_attributes=True,
