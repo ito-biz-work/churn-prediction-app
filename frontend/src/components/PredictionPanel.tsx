@@ -48,7 +48,7 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
       borderRadius="lg"
     >
       <Heading size="lg" mb={6}>
-        予測結果詳細
+        予測結果
       </Heading>
 
       {/* 退会確率 */}

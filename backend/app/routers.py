@@ -1,18 +1,24 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from backend.app.core import get_customers, get_prediction
+from backend.app.core import get_customer_prediction, get_customers
 from backend.app.database import get_db
-from backend.app.schemas import CustomerListOutput, PredictionInput, PredictionOutput
+from backend.app.schemas import CustomerListOutput, PredictionOutput
 
 router = APIRouter()
 
 
 @router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
-def predict(input_data: PredictionInput):
-    return get_prediction(input_data)
+def predict(customer_id: int, db: Session = Depends(get_db)):
+    result = get_customer_prediction(customer_id, db)
+    print(f"DEBUG: result object: {result}")
+    return result
 
 
 @router.get("/customers", response_model=CustomerListOutput, tags=["Customers"])
-def list_customers(db: Session = Depends(get_db), skip: int = 0, limit: int = 5):
+def list_customers(
+    db: Session = Depends(get_db),
+    skip: int = Query(0, ge=0, description="スキップする件数"),
+    limit: int = Query(5, gt=0, description="取得する件数"),
+):
     return get_customers(db, skip=skip, limit=limit)

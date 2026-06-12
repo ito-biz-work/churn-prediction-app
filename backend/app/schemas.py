@@ -4,7 +4,15 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
-class PredictionInput(BaseModel):
+class BaseSchema(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True,  # ORMオブジェクトの属性とPydanticモデル間の変換を許可
+        alias_generator=to_camel,  # キャメルケース変換を自動化
+        populate_by_name=True,  # スネークケース名でのアクセスも許可
+    )
+
+
+class PredictionInput(BaseSchema):
     # --- 顧客属性 ---
     state: str = Field(
         ..., pattern="^[A-Z]{2}$", description="居住州（2文字コード）", examples=["NJ"]
@@ -48,33 +56,34 @@ class PredictionInput(BaseModel):
         ..., ge=0, description="カスタマーサービスへの通話回数"
     )
 
-
-class PredictionOutput(BaseModel):
-    churn_prediction: Literal[0, 1] = Field(
-        ..., description="解約予測結果（1:解約, 0:継続）"
-    )
-    churn_probability: float = Field(
-        ..., ge=0, le=1, description="解約予測確率（0.0〜1.0）"
+    model_config = ConfigDict(
+        **BaseSchema.model_config,
+        extra="ignore",  # 定義外のカラムは無視
     )
 
 
-class CustomerItem(BaseModel):
+class CustomerDetail(BaseSchema):
+    name: str
+    state: str
+    area_code: str
+    contract_months: int
+
+
+class PredictionResult(BaseSchema):
+    probability: float = Field(..., ge=0, le=1, description="解約予測確率（0.0〜1.0）")
+
+
+class PredictionOutput(BaseSchema):
+    customer: CustomerDetail
+    prediction: PredictionResult
+
+
+class CustomerItem(BaseSchema):
     id: int
     customer_name: str
     customer_code: str
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        alias_generator=to_camel,  # キャメルケース変換を自動化
-        populate_by_name=True,  # スネークケース名でのアクセスも許可
-    )
 
-
-class CustomerListOutput(BaseModel):
+class CustomerListOutput(BaseSchema):
     total_count: int
     items: List[CustomerItem]
-
-    model_config = ConfigDict(
-        alias_generator=to_camel,
-        populate_by_name=True,
-    )
