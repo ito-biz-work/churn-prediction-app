@@ -10,9 +10,7 @@ router = APIRouter()
 
 @router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
 def predict(customer_id: int, db: Session = Depends(get_db)):
-    result = get_customer_prediction(customer_id, db)
-    print(f"DEBUG: result object: {result}")
-    return result
+    return get_customer_prediction(customer_id, db)
 
 
 @router.get("/customers", response_model=CustomerListOutput, tags=["Customers"])

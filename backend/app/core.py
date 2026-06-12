@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from backend.app.models.customer_metrics import CustomerMetrics
-from backend.app.schemas import PredictionInput, PredictionOutput
+from backend.app.schemas import PredictionInput, PredictionOutput, PredictionResult
 from config.settings import MODEL_JOBLIB
 
 # サーバー起動時に1回だけモデルをロード
@@ -23,10 +23,10 @@ def get_customer_prediction(customer_id: int, db: Session) -> PredictionOutput:
     # 予測を実施
     prediction = get_prediction(data)
 
-    return {
-        "customer": customer,
-        "prediction": {"probability": prediction["probability"]},
-    }
+    return PredictionOutput(
+        customer=customer,
+        prediction=PredictionResult(probability=prediction["probability"]),
+    )
 
 
 def get_prediction(input_data: PredictionInput) -> float:

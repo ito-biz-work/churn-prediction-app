@@ -63,10 +63,17 @@ class PredictionInput(BaseSchema):
 
 
 class CustomerDetail(BaseSchema):
-    name: str
+    id: int
+    customer_name: str
+    customer_code: str
     state: str
     area_code: str
-    contract_months: int
+    account_length: int
+
+    model_config = ConfigDict(
+        **BaseSchema.model_config,
+        extra="ignore",  # 定義外のカラムは無視
+    )
 
 
 class PredictionResult(BaseSchema):
