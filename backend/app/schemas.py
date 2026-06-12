@@ -1,6 +1,7 @@
-from typing import Literal
+from typing import List, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
 
 
 class PredictionInput(BaseModel):
@@ -57,13 +58,23 @@ class PredictionOutput(BaseModel):
     )
 
 
-class CustomerListOutput(BaseModel):
+class CustomerItem(BaseModel):
     id: int
     customer_name: str
     customer_code: str
-    state: str
-    area_code: str
-    account_length: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        alias_generator=to_camel,  # キャメルケース変換を自動化
+        populate_by_name=True,  # スネークケース名でのアクセスも許可
+    )
+
+
+class CustomerListOutput(BaseModel):
+    total_count: int
+    items: List[CustomerItem]
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )

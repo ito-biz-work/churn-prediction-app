@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import CustomerList, { type Customer } from './components/CustomerList';
-import PredictionPanel from './components/PredictionPanel';
+import CustomerList, { type Customer } from "./components/CustomerList";
+import PredictionPanel from "./components/PredictionPanel";
 
 function App() {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null,
+  );
 
   return (
     <Flex direction="column" minH="100vh" bg="bg.subtle">
@@ -26,7 +28,14 @@ function App() {
       </Flex>
 
       {/* フッター */}
-      <Box as="footer" bg="bg.muted" borderTop="1px" borderColor="border.emphasized" p={4} textAlign="center">
+      <Box
+        as="footer"
+        bg="bg.muted"
+        borderTop="1px"
+        borderColor="border.emphasized"
+        p={4}
+        textAlign="center"
+      >
         <Text fontSize="sm" color="fg.muted">
           © 2026 Customer Insights System
         </Text>

@@ -1,37 +1,80 @@
-import { useState } from "react";
-import { Box, Heading, Button, Table, Pagination, IconButton, ButtonGroup } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+  Box,
+  Heading,
+  Button,
+  Table,
+  Pagination,
+  IconButton,
+  ButtonGroup,
+} from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
 export type Customer = {
   id: number;
-  name: string;
-  code: string;
+  customerName: string;
+  customerCode: string;
 };
-
-// 仮データ
-const customers: Customer[] = [
-  { id: 1, name: "田中 太郎", code: "CUST001" },
-  { id: 2, name: "佐藤 花子", code: "CUST002" },
-  { id: 3, name: "鈴木 一郎", code: "CUST003" },
-  { id: 4, name: "高橋 誠", code: "CUST004" },
-  { id: 5, name: "伊藤 由美", code: "CUST005" },
-];
 
 interface CustomerListProps {
   onSelect: (customer: Customer) => void;
 }
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 
 export default function CustomerList({ onSelect }: CustomerListProps) {
-  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
-  // ページに応じたデータ切り出し
-  const paginatedCustomers = customers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  // ページ変更用ハンドラ
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
+
+  // ページ更新時のみ実行
+  useEffect(() => {
+    // 顧客情報取得
+    const fetchCustomers = async () => {
+      setLoading(true);
+      try {
+        const skip = (page - 1) * PAGE_SIZE;
+        const response = await fetch(
+          `http://localhost:8000/api/v1/customers?skip=${skip}&limit=${PAGE_SIZE}`,
+        );
+        const data = await response.json();
+        setTotalCount(data.totalCount);
+        setCustomers(data.items);
+      } catch (error) {
+        console.log("データ取得エラー:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, [page]);
+
+  if (loading) return <Box>読み込み中...</Box>;
 
   return (
-    <Box display="flex" flexDirection="column" minH="50vh" bg="bg.panel" p={6} shadow="md" borderWidth="1px" borderColor="border" borderRadius="lg">
-      <Heading size="lg" mb={4}>顧客一覧</Heading>
+    <Box
+      display="flex"
+      flexDirection="column"
+      minH="50vh"
+      bg="bg.panel"
+      p={6}
+      shadow="md"
+      borderWidth="1px"
+      borderColor="border"
+      borderRadius="lg"
+    >
+      <Heading size="lg" mb={4}>
+        顧客一覧
+      </Heading>
 
       {/* Table */}
       <Box flex="1" overflow="auto" mb={4}>
@@ -40,18 +83,25 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
             <Table.Row>
               <Table.ColumnHeader color="fg.muted">ID</Table.ColumnHeader>
               <Table.ColumnHeader color="fg.muted">氏名</Table.ColumnHeader>
-              <Table.ColumnHeader color="fg.muted">顧客コード</Table.ColumnHeader>
+              <Table.ColumnHeader color="fg.muted">
+                顧客コード
+              </Table.ColumnHeader>
               <Table.ColumnHeader />
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {paginatedCustomers.map((customer) => (
+            {customers.map((customer) => (
               <Table.Row key={customer.id}>
                 <Table.Cell>{customer.id}</Table.Cell>
-                <Table.Cell>{customer.name}</Table.Cell>
-                <Table.Cell>{customer.code}</Table.Cell>
+                <Table.Cell>{customer.customerName}</Table.Cell>
+                <Table.Cell>{customer.customerCode}</Table.Cell>
                 <Table.Cell textAlign="end">
-                  <Button colorPalette="cyan" size="sm" shadow="sm" onClick={() => onSelect(customer)}>
+                  <Button
+                    colorPalette="cyan"
+                    size="sm"
+                    shadow="sm"
+                    onClick={() => onSelect(customer)}
+                  >
                     実行
                   </Button>
                 </Table.Cell>
@@ -62,25 +112,31 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
       </Box>
 
       {/* Pagination */}
-      <Pagination.Root 
-        count={customers.length} 
-        pageSize={PAGE_SIZE} 
-        page={page} 
-        onPageChange={(e) => setPage(e.page)}
+      <Pagination.Root
+        count={totalCount}
+        pageSize={PAGE_SIZE}
+        page={page}
+        onPageChange={(e) => handlePageChange(e.page)}
       >
         <ButtonGroup variant="outline" size="sm" justifyContent="center">
           <Pagination.PrevTrigger asChild>
-            <IconButton><LuChevronLeft /></IconButton>
-          </Pagination.PrevTrigger>
-          
-          <Pagination.Items render={(p) => (
-            <IconButton variant={p.value === page ? "surface" : "ghost"}>
-              {p.value}
+            <IconButton>
+              <LuChevronLeft />
             </IconButton>
-          )} />
-          
+          </Pagination.PrevTrigger>
+
+          <Pagination.Items
+            render={(p) => (
+              <IconButton variant={p.value === page ? "surface" : "ghost"}>
+                {p.value}
+              </IconButton>
+            )}
+          />
+
           <Pagination.NextTrigger asChild>
-            <IconButton><LuChevronRight /></IconButton>
+            <IconButton>
+              <LuChevronRight />
+            </IconButton>
           </Pagination.NextTrigger>
         </ButtonGroup>
       </Pagination.Root>
