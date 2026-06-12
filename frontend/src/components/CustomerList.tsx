@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Box,
   Heading,
@@ -25,12 +26,18 @@ const PAGE_SIZE = 5;
 export default function CustomerList({ onSelect }: CustomerListProps) {
   const [totalCount, setTotalCount] = useState(0);
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10);
 
-  // 顧客情報取得
+  // ページ変更用ハンドラ
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ page: newPage.toString() });
+  };
+
   // ページ更新時のみ実行
   useEffect(() => {
+    // 顧客情報取得
     const fetchCustomers = async () => {
       setLoading(true);
       try {
@@ -109,7 +116,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
         count={totalCount}
         pageSize={PAGE_SIZE}
         page={page}
-        onPageChange={(e) => setPage(e.page)}
+        onPageChange={(e) => handlePageChange(e.page)}
       >
         <ButtonGroup variant="outline" size="sm" justifyContent="center">
           <Pagination.PrevTrigger asChild>
