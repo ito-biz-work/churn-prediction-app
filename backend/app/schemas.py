@@ -63,12 +63,13 @@ class PredictionInput(BaseSchema):
 
 
 class CustomerDetail(BaseSchema):
-    id: int
-    customer_name: str
-    customer_code: str
-    state: str
-    area_code: str
     account_length: int
+    total_day_minutes: float
+    total_day_charge: float
+    total_eve_minutes: float
+    total_eve_charge: float
+    total_night_minutes: float
+    total_night_charge: float
 
     model_config = ConfigDict(
         **BaseSchema.model_config,

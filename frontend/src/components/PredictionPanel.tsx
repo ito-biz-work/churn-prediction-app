@@ -1,15 +1,16 @@
-import { Box, Heading, Text, DataList } from "@chakra-ui/react";
+import { Box, Heading, Text, DataList, Flex } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { type Customer } from "./CustomerList";
 
 // 型
 interface CustomerDetail {
-  id: number;
-  customerName: string;
-  customerCode: string;
-  state: string;
-  areaCode: string;
   accountLength: number;
+  totalDayMinutes: number;
+  totalDayCharge: number;
+  totalEveMinutes: number;
+  totalEveCharge: number;
+  totalNightMinutes: number;
+  totalNightCharge: number;
 }
 
 interface PredictionFields {
@@ -75,12 +76,31 @@ export default function PredictionPanel({
   }
 
   const customerFields = [
-    { label: "ID", value: prediction.customer.id },
-    { label: "氏名", value: prediction.customer.customerName },
-    { label: "顧客コード", value: prediction.customer.customerCode },
-    { label: "居住州", value: prediction.customer.state },
-    { label: "エリアコード", value: prediction.customer.areaCode },
-    { label: "契約期間", value: `${prediction.customer.accountLength}ヶ月` },
+    { label: "契約期間", value: `${prediction.customer.accountLength} ヶ月` },
+    {
+      label: "昼間の通話時間",
+      value: `${prediction.customer.totalDayMinutes} 分`,
+    },
+    {
+      label: "昼間の通話料金",
+      value: `${prediction.customer.totalDayCharge} ドル`,
+    },
+    {
+      label: "夕方の通話時間",
+      value: `${prediction.customer.totalEveMinutes} 分`,
+    },
+    {
+      label: "夕方の通話料金",
+      value: `${prediction.customer.totalEveCharge} ドル`,
+    },
+    {
+      label: "夜間の通話時間",
+      value: `${prediction.customer.totalNightMinutes} 分`,
+    },
+    {
+      label: "夜間の通話料金",
+      value: `${prediction.customer.totalNightCharge} ドル`,
+    },
   ];
 
   const getProbabilityColor = (prob: number) => {
@@ -129,7 +149,7 @@ export default function PredictionPanel({
         </Text>
       </Box>
 
-      {/* 顧客属性情報 */}
+      {/* 退会予測の重要項目 */}
       <Box
         borderWidth="1px"
         borderColor="border"
@@ -137,14 +157,19 @@ export default function PredictionPanel({
         overflow="hidden"
       >
         <Box bg="bg.muted" p={3} borderBottomWidth="1px" borderColor="border">
-          <Text
-            fontWeight="semibold"
-            fontSize="sm"
-            color="fg.muted"
-            letterSpacing="wide"
-          >
-            顧客属性情報
-          </Text>
+          <Flex align="center" justify="space-between">
+            <Text
+              fontWeight="semibold"
+              fontSize="sm"
+              color="fg.muted"
+              letterSpacing="wide"
+            >
+              退会予測の重要項目
+            </Text>
+            <Text fontSize="xs" color="fg.muted" opacity={0.8}>
+              ※重要度上位7項目
+            </Text>
+          </Flex>
         </Box>
         <Box p={4}>
           <DataList.Root orientation="horizontal">

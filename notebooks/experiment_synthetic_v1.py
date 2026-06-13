@@ -150,3 +150,26 @@ print(f"Accuracy: {final_acc:.2f}")
 print(f"AUC : {final_auc:.2f}")
 
 # %%
+# 特徴量重要度
+
+# パイプライン内の各ステップにアクセス
+model_step = final_pipe.named_steps["classifier"]
+preprocessor_step = final_pipe.named_steps["preprocessor"]
+
+# 特徴量名の取得
+# OHEやカウントエンコーディング後の名前を取る
+feature_names = preprocessor_step.get_feature_names_out()
+
+# 重要度の取得
+importances = model_step.feature_importances_
+
+# DataFrame化
+feature_importances_df = pd.DataFrame(
+    {"feature": feature_names, "importance": importances}
+).sort_values(by="importance", ascending=False)
+
+print("--- 特徴量の重要度 ---")
+# print(feature_importances_df.head(10))  # 上位10個を表示
+print(feature_importances_df.head(7))  # 上位7個を表示
+
+# %%
