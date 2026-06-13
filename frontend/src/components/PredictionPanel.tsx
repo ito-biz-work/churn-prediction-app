@@ -83,6 +83,12 @@ export default function PredictionPanel({
     { label: "契約期間", value: `${prediction.customer.accountLength}ヶ月` },
   ];
 
+  const getProbabilityColor = (prob: number) => {
+    if (prob >= 0.8) return "red.solid"; // 高リスク：赤
+    if (prob >= 0.4) return "yellow.focusRing"; // 中リスク：黄
+    return "green.solid"; // 低リスク：緑
+  };
+
   return (
     <Box
       p={6}
@@ -114,7 +120,11 @@ export default function PredictionPanel({
         >
           退会確率
         </Text>
-        <Text fontSize="4xl" fontWeight="extrabold" color="red.solid">
+        <Text
+          fontSize="4xl"
+          fontWeight="extrabold"
+          color={getProbabilityColor(prediction.probability)}
+        >
           {(prediction.probability * 100).toFixed(0)}%
         </Text>
       </Box>
