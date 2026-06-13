@@ -76,13 +76,17 @@ class CustomerDetail(BaseSchema):
     )
 
 
-class PredictionResult(BaseSchema):
+class PredictionFields:
     probability: float = Field(..., ge=0, le=1, description="解約予測確率（0.0〜1.0）")
+
+
+class PredictionResult(BaseSchema):
+    probability: float = PredictionFields.probability
 
 
 class PredictionOutput(BaseSchema):
     customer: CustomerDetail
-    prediction: PredictionResult
+    probability: float = PredictionFields.probability
 
 
 class CustomerItem(BaseSchema):
