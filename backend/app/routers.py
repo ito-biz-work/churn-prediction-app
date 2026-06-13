@@ -8,7 +8,7 @@ from backend.app.schemas import CustomerListOutput, PredictionOutput
 router = APIRouter()
 
 
-@router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
+@router.get("/predict", response_model=PredictionOutput, tags=["Prediction"])
 def predict(customer_id: int, db: Session = Depends(get_db)):
     return get_customer_prediction(customer_id, db)
 
