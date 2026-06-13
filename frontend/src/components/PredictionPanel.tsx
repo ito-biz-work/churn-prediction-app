@@ -1,26 +1,62 @@
 import { Box, Heading, Text, DataList } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { type Customer } from "./CustomerList";
 
-// 顧客データの型を定義
-interface Customer {
+// 型
+interface CustomerDetail {
   id: number;
-  name: string;
-  code: string;
+  customerName: string;
+  customerCode: string;
+  state: string;
+  areaCode: string;
+  accountLength: number;
 }
 
-interface PredictionPanelProps {
+interface PredictionFields {
+  probability: number;
+}
+
+interface PredictionOutput {
+  customer: CustomerDetail;
+  probability: PredictionFields["probability"];
+}
+
+export default function PredictionPanel({
+  customer,
+}: {
   customer: Customer | null;
-}
+}) {
+  const [prediction, setPrediction] = useState<PredictionOutput | null>(null);
+  const [loading, setLoading] = useState(false);
 
-const customerInfo = [
-  { label: "氏名", value: "田中 太郎" },
-  { label: "居住州", value: "NJ" },
-  { label: "エリアコード", value: "area_code_415" },
-  { label: "契約期間", value: "55ヶ月" },
-];
+  useEffect(() => {
+    if (!customer) {
+      queueMicrotask(() => setPrediction(null));
+      return;
+    }
 
-export default function PredictionPanel({ customer }: PredictionPanelProps) {
+    const fetchPrediction = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/v1/predict?customer_id=${customer.id}`,
+        );
+        const data = await response.json();
+        setPrediction(data);
+      } catch (error) {
+        console.log("データ取得エラー:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrediction();
+  }, [customer]);
+
+  if (loading) return <Box>読み込み中...</Box>;
+
   // 顧客が選択されていない場合の表示
-  if (!customer) {
+  if (!customer || !prediction) {
     return (
       <Box
         p={8}
@@ -37,6 +73,15 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
       </Box>
     );
   }
+
+  const customerFields = [
+    { label: "ID", value: prediction.customer.id },
+    { label: "氏名", value: prediction.customer.customerName },
+    { label: "顧客コード", value: prediction.customer.customerCode },
+    { label: "居住州", value: prediction.customer.state },
+    { label: "エリアコード", value: prediction.customer.areaCode },
+    { label: "契約期間", value: `${prediction.customer.accountLength}ヶ月` },
+  ];
 
   return (
     <Box
@@ -70,7 +115,7 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
           退会確率
         </Text>
         <Text fontSize="4xl" fontWeight="extrabold" color="red.solid">
-          85%
+          {(prediction.probability * 100).toFixed(0)}%
         </Text>
       </Box>
 
@@ -93,7 +138,7 @@ export default function PredictionPanel({ customer }: PredictionPanelProps) {
         </Box>
         <Box p={4}>
           <DataList.Root orientation="horizontal">
-            {customerInfo.map((item) => (
+            {customerFields.map((item) => (
               <DataList.Item key={item.label}>
                 <DataList.ItemLabel>{item.label}</DataList.ItemLabel>
                 <DataList.ItemValue>{item.value}</DataList.ItemValue>
