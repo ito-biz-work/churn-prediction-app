@@ -90,9 +90,14 @@ export default function PredictionPanel({
       borderColor="border"
       borderRadius="lg"
     >
-      <Heading size="lg" mb={3}>
-        退会確率
-      </Heading>
+      <Flex align="center" justify="space-between">
+        <Heading size="lg" mb={3}>
+          退会確率
+        </Heading>
+        <Text fontSize="sm" mb={3} mr={3} color="fg.muted" opacity={0.8}>
+          対象顧客: {customer.customerName} 様
+        </Text>
+      </Flex>
 
       {/* 退会確率 */}
       <Box
