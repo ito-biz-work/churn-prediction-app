@@ -62,6 +62,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
 
   return (
     <Box
+      flex="1"
       display="flex"
       flexDirection="column"
       minH="50vh"

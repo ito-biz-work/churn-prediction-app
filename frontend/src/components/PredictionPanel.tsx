@@ -60,7 +60,8 @@ export default function PredictionPanel({
   if (!customer || !prediction) {
     return (
       <Box
-        p={8}
+        flex="1"
+        p={6}
         bg="bg.panel"
         shadow="md"
         borderWidth="1px"
@@ -111,6 +112,7 @@ export default function PredictionPanel({
 
   return (
     <Box
+      flex="1"
       p={6}
       bg="bg.panel"
       shadow="md"
@@ -118,28 +120,19 @@ export default function PredictionPanel({
       borderColor="border"
       borderRadius="lg"
     >
-      <Heading size="lg" mb={6}>
-        予測結果
+      <Heading size="lg" mb={3}>
+        退会確率
       </Heading>
 
       {/* 退会確率 */}
       <Box
-        p={6}
+        p={3}
         bg="bg.subtle"
         borderRadius="md"
         borderWidth="1px"
         borderColor="border"
-        mb={6}
+        mb={3}
       >
-        <Text
-          fontSize="sm"
-          fontWeight="semibold"
-          color="fg.muted"
-          letterSpacing="wide"
-          mb={1}
-        >
-          退会確率
-        </Text>
         <Text
           fontSize="4xl"
           fontWeight="extrabold"
@@ -149,7 +142,7 @@ export default function PredictionPanel({
         </Text>
       </Box>
 
-      {/* 退会予測の重要項目 */}
+      {/* 重要項目 */}
       <Box
         borderWidth="1px"
         borderColor="border"
@@ -164,10 +157,10 @@ export default function PredictionPanel({
               color="fg.muted"
               letterSpacing="wide"
             >
-              退会予測の重要項目
+              重要項目
             </Text>
             <Text fontSize="xs" color="fg.muted" opacity={0.8}>
-              ※重要度上位7項目
+              ※上位7項目
             </Text>
           </Flex>
         </Box>
