@@ -1,6 +1,5 @@
 import joblib
 import pandas as pd
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from backend.app.models.customer_metrics import CustomerMetrics
@@ -11,38 +10,18 @@ from config.settings import MODEL_JOBLIB
 model = joblib.load(MODEL_JOBLIB)
 
 
-def get_customer_prediction(customer_id: int, db: Session) -> PredictionOutput:
-    # 顧客情報の取得
-    customer = get_customer(customer_id, db)
-    if not customer:
-        raise HTTPException(status_code=404, detail="Customer not found")
+def get_prediction(data: PredictionInput) -> PredictionOutput:
+    """機械学習モデルによる退会確率の予測結果を返す"""
 
-    # DBモデルから推論用入力データを生成
-    data = PredictionInput.model_validate(customer)
+    # Pydanticモデルを推論可能な形式(DataFrame)に変換
+    df = pd.DataFrame([data.model_dump()])
 
-    # 予測を実施
-    prediction = get_prediction(data)
+    # 推論の実行
+    # 「1:yes」のラベル位置を特定して確率を取得
+    churn_index = list(model.classes_).index(1)
+    probability = float(model.predict_proba(df)[0][churn_index])
 
-    return PredictionOutput(
-        customer=customer,
-        probability=prediction["probability"],
-    )
-
-
-def get_prediction(input_data: PredictionInput) -> float:
-    """ "入力データを受け取り、モデルで推論して結果を返す"""
-    # Pydanticモデルを辞書に変換し、PandasのDataFrameにする
-    df = pd.DataFrame([input_data.model_dump()])
-
-    # 推論
-    churn_index = list(model.classes_).index(1)  # 「1:yes」のラベルを探す
-    probability = float(model.predict_proba(df)[0][churn_index])  # 確率
-
-    return {"probability": probability}
-
-
-def get_customer(customer_id: int, db: Session):
-    return db.query(CustomerMetrics).filter(CustomerMetrics.id == customer_id).first()
+    return PredictionOutput(probability=probability)
 
 
 def get_customers(db: Session, skip: int = 0, limit: int = 5):

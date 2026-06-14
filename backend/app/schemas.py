@@ -62,14 +62,44 @@ class PredictionInput(BaseSchema):
     )
 
 
-class CustomerDetail(BaseSchema):
+class PredictionOutput(BaseSchema):
+    probability: float = Field(..., ge=0, le=1, description="解約予測確率（0.0〜1.0）")
+
+
+class Customer(BaseSchema):
+    id: int
+
+    # --- 顧客属性 ---
+    customer_name: str
+    customer_code: str
+    state: str
+    area_code: str
     account_length: int
+
+    # --- プラン情報 ---
+    international_plan: str
+    voice_mail_plan: str
+    number_vmail_messages: int
+
+    # --- 通話利用状況 ---
     total_day_minutes: float
+    total_day_calls: int
     total_day_charge: float
+
     total_eve_minutes: float
+    total_eve_calls: int
     total_eve_charge: float
+
     total_night_minutes: float
+    total_night_calls: int
     total_night_charge: float
+
+    total_intl_minutes: float
+    total_intl_calls: int
+    total_intl_charge: float
+
+    # --- サポート状況 ---
+    number_customer_service_calls: int
 
     model_config = ConfigDict(
         **BaseSchema.model_config,
@@ -77,25 +107,6 @@ class CustomerDetail(BaseSchema):
     )
 
 
-class PredictionFields:
-    probability: float = Field(..., ge=0, le=1, description="解約予測確率（0.0〜1.0）")
-
-
-class PredictionResult(BaseSchema):
-    probability: float = PredictionFields.probability
-
-
-class PredictionOutput(BaseSchema):
-    customer: CustomerDetail
-    probability: float = PredictionFields.probability
-
-
-class CustomerItem(BaseSchema):
-    id: int
-    customer_name: str
-    customer_code: str
-
-
 class CustomerListOutput(BaseSchema):
     total_count: int
-    items: List[CustomerItem]
+    items: List[Customer]

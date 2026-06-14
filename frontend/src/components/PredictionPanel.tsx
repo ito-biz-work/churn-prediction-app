@@ -2,24 +2,8 @@ import { Box, Heading, Text, DataList, Flex } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { type Customer } from "./CustomerList";
 
-// 型
-interface CustomerDetail {
-  accountLength: number;
-  totalDayMinutes: number;
-  totalDayCharge: number;
-  totalEveMinutes: number;
-  totalEveCharge: number;
-  totalNightMinutes: number;
-  totalNightCharge: number;
-}
-
-interface PredictionFields {
-  probability: number;
-}
-
 interface PredictionOutput {
-  customer: CustomerDetail;
-  probability: PredictionFields["probability"];
+  probability: number;
 }
 
 export default function PredictionPanel({
@@ -39,9 +23,13 @@ export default function PredictionPanel({
     const fetchPrediction = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `http://localhost:8000/api/v1/predict?customer_id=${customer.id}`,
-        );
+        const response = await fetch("http://localhost:8000/api/v1/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(customer),
+        });
         const data = await response.json();
         setPrediction(data);
       } catch (error) {
@@ -77,31 +65,13 @@ export default function PredictionPanel({
   }
 
   const customerFields = [
-    { label: "契約期間", value: `${prediction.customer.accountLength} ヶ月` },
-    {
-      label: "昼間の通話時間",
-      value: `${prediction.customer.totalDayMinutes} 分`,
-    },
-    {
-      label: "昼間の通話料金",
-      value: `${prediction.customer.totalDayCharge} ドル`,
-    },
-    {
-      label: "夕方の通話時間",
-      value: `${prediction.customer.totalEveMinutes} 分`,
-    },
-    {
-      label: "夕方の通話料金",
-      value: `${prediction.customer.totalEveCharge} ドル`,
-    },
-    {
-      label: "夜間の通話時間",
-      value: `${prediction.customer.totalNightMinutes} 分`,
-    },
-    {
-      label: "夜間の通話料金",
-      value: `${prediction.customer.totalNightCharge} ドル`,
-    },
+    { label: "契約期間", value: `${customer.accountLength} ヶ月` },
+    { label: "昼間の通話時間", value: `${customer.totalDayMinutes} 分` },
+    { label: "昼間の通話料金", value: `${customer.totalDayCharge} ドル` },
+    { label: "夕方の通話時間", value: `${customer.totalEveMinutes} 分` },
+    { label: "夕方の通話料金", value: `${customer.totalEveCharge} ドル` },
+    { label: "夜間の通話時間", value: `${customer.totalNightMinutes} 分` },
+    { label: "夜間の通話料金", value: `${customer.totalNightCharge} ドル` },
   ];
 
   const getProbabilityColor = (prob: number) => {
