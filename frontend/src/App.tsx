@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import CustomerList, { type Customer } from "./components/CustomerList";
+import CustomerList from "./components/CustomerList/CustomerList";
 import PredictionPanel from "./components/PredictionPanel";
+import { type Customer } from "./types/customer";
 
 function App() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(

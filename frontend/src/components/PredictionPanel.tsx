@@ -1,6 +1,6 @@
 import { Box, Heading, Text, DataList, Flex } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { type Customer } from "./CustomerList";
+import { type Customer } from "@/types/customer";
 
 interface PredictionOutput {
   probability: number;
