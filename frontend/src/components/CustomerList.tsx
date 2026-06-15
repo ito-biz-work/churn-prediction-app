@@ -11,11 +11,41 @@ import {
 } from "@chakra-ui/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
-export type Customer = {
+export interface Customer {
   id: number;
+
+  // --- 顧客属性 ---
   customerName: string;
   customerCode: string;
-};
+  state: string;
+  areaCode: string;
+  accountLength: number;
+
+  // --- プラン情報 ---
+  internationalPlan: string;
+  voiceMailPlan: string;
+  numberVmailMessages: number;
+
+  // --- 通話利用状況 ---
+  totalDayMinutes: number;
+  totalDayCalls: number;
+  totalDayCharge: number;
+
+  totalEveMinutes: number;
+  totalEveCalls: number;
+  totalEveCharge: number;
+
+  totalNightMinutes: number;
+  totalNightCalls: number;
+  totalNightCharge: number;
+
+  totalIntlMinutes: number;
+  totalIntlCalls: number;
+  totalIntlCharge: number;
+
+  // --- サポート状況 ---
+  numberCustomerServiceCalls: number;
+}
 
 interface CustomerListProps {
   onSelect: (customer: Customer) => void;
@@ -62,6 +92,7 @@ export default function CustomerList({ onSelect }: CustomerListProps) {
 
   return (
     <Box
+      flex="1"
       display="flex"
       flexDirection="column"
       minH="50vh"

@@ -4,7 +4,15 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
-class PredictionInput(BaseModel):
+class BaseSchema(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True,  # ORMオブジェクトの属性とPydanticモデル間の変換を許可
+        alias_generator=to_camel,  # キャメルケース変換を自動化
+        populate_by_name=True,  # スネークケース名でのアクセスも許可
+    )
+
+
+class PredictionInput(BaseSchema):
     # --- 顧客属性 ---
     state: str = Field(
         ..., pattern="^[A-Z]{2}$", description="居住州（2文字コード）", examples=["NJ"]
@@ -48,33 +56,57 @@ class PredictionInput(BaseModel):
         ..., ge=0, description="カスタマーサービスへの通話回数"
     )
 
-
-class PredictionOutput(BaseModel):
-    churn_prediction: Literal[0, 1] = Field(
-        ..., description="解約予測結果（1:解約, 0:継続）"
-    )
-    churn_probability: float = Field(
-        ..., ge=0, le=1, description="解約予測確率（0.0〜1.0）"
+    model_config = ConfigDict(
+        **BaseSchema.model_config,
+        extra="ignore",  # 定義外のカラムは無視
     )
 
 
-class CustomerItem(BaseModel):
+class PredictionOutput(BaseSchema):
+    probability: float = Field(..., ge=0, le=1, description="解約予測確率（0.0〜1.0）")
+
+
+class Customer(BaseSchema):
     id: int
+
+    # --- 顧客属性 ---
     customer_name: str
     customer_code: str
+    state: str
+    area_code: str
+    account_length: int
+
+    # --- プラン情報 ---
+    international_plan: str
+    voice_mail_plan: str
+    number_vmail_messages: int
+
+    # --- 通話利用状況 ---
+    total_day_minutes: float
+    total_day_calls: int
+    total_day_charge: float
+
+    total_eve_minutes: float
+    total_eve_calls: int
+    total_eve_charge: float
+
+    total_night_minutes: float
+    total_night_calls: int
+    total_night_charge: float
+
+    total_intl_minutes: float
+    total_intl_calls: int
+    total_intl_charge: float
+
+    # --- サポート状況 ---
+    number_customer_service_calls: int
 
     model_config = ConfigDict(
-        from_attributes=True,
-        alias_generator=to_camel,  # キャメルケース変換を自動化
-        populate_by_name=True,  # スネークケース名でのアクセスも許可
+        **BaseSchema.model_config,
+        extra="ignore",  # 定義外のカラムは無視
     )
 
 
-class CustomerListOutput(BaseModel):
+class CustomerListOutput(BaseSchema):
     total_count: int
-    items: List[CustomerItem]
-
-    model_config = ConfigDict(
-        alias_generator=to_camel,
-        populate_by_name=True,
-    )
+    items: List[Customer]

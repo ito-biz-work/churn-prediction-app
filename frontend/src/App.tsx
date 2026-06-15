@@ -11,18 +11,18 @@ function App() {
   return (
     <Flex direction="column" minH="100vh" bg="bg.subtle">
       {/* ヘッダー */}
-      <Box as="header" bg="cyan.fg" p={4} shadow="md">
+      <Box as="header" bg="cyan.fg" p={3} shadow="md">
         <Heading size="md" color="cyan.contrast" letterSpacing="wide">
           顧客分析ダッシュボード
         </Heading>
       </Box>
 
       {/* メインコンテンツ */}
-      <Flex as="main" flex="1" p={6} gap={6}>
-        <Box w="50%">
+      <Flex as="main" flex="1" p={5} gap={5} align="stretch">
+        <Box flex="2" display="flex" flexDirection="column">
           <CustomerList onSelect={setSelectedCustomer} />
         </Box>
-        <Box w="50%">
+        <Box flex="1" display="flex" flexDirection="column">
           <PredictionPanel customer={selectedCustomer} />
         </Box>
       </Flex>
@@ -33,7 +33,7 @@ function App() {
         bg="bg.muted"
         borderTop="1px"
         borderColor="border.emphasized"
-        p={4}
+        p={3}
         textAlign="center"
       >
         <Text fontSize="sm" color="fg.muted">
