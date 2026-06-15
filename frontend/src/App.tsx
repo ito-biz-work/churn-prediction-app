@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import CustomerList from "./components/CustomerList/CustomerList";
-import PredictionPanel from "./components/PredictionPanel";
+import PredictionPanel from "./components/PredictionPanel/PredictionPanel";
 import { type Customer } from "./types/customer";
 
 function App() {
