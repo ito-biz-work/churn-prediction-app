@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# UVのインストール
+RUN pip install uv
+
+# 仮想環境を作らず、直接インストールする
+COPY pyproject.toml uv.lock ./
+RUN uv pip install --system -r pyproject.toml
+
+# ソースコードをコピー
+COPY . .
+
+# 実行
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

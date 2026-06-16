@@ -9,7 +9,9 @@ app = FastAPI(
 )
 
 # Reactアプリが動くURLを許可
-origins = ["http://localhost:5173"]  # Viteのデフォルトポート
+origins = [
+    "http://localhost:5173",  # Viteのデフォルトポート
+]
 
 app.add_middleware(
     CORSMiddleware,

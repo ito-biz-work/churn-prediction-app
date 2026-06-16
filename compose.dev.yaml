@@ -1,0 +1,18 @@
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    ports: ["8000:8000"]
+    volumes: 
+      - .:/app # コードの同期
+    working_dir: /app
+    environment:
+      - DATABASE_URL=sqlite:////app/data/churn.db # コンテナ内でのパスを指定
+  
+  frontend:
+    build: ./frontend
+    ports: ["5173:80"] # Nginx
+
+volumes:
+  venv_volume:
