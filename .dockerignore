@@ -1,0 +1,20 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.egg-info
+
+# Node.js
+node_modules
+
+# 仮想環境とローカル環境設定
+.venv
+.env
+
+# OS/エディタ
+.DS_Store
+.vscode
+.idea
