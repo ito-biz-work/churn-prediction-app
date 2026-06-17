@@ -1,6 +1,8 @@
 # --- 本番用 たたき台
 services:
   backend:
+    image: churn-app-back:v1.0-prd
+    container_name: back-v1.0-prd
     build:
       context: .
       dockerfile: backend/Dockerfile
@@ -10,6 +12,8 @@ services:
       - WORKER_COUNT=1
 
   frontend:
+    image: churn-app-front:v1.0-prd
+    container_name: front-v1.0-prd
     build:
       context: ./frontend
       dockerfile: Dockerfile

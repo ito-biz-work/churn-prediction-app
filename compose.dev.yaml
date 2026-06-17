@@ -1,6 +1,8 @@
 # --- 開発用
 services:
   backend:
+    image: churn-app-back:v1.0-dev
+    container_name: back-v1.0-dev
     build: 
       context: .
       dockerfile: backend/Dockerfile.dev
@@ -12,6 +14,8 @@ services:
       - DATABASE_URL=sqlite:////app/data/churn.db # コンテナ内でのパスを指定
   
   frontend:
+    image: churn-app-front:v1.0-dev
+    container_name: front-v1.0-dev
     build: 
       context: ./frontend
       dockerfile: Dockerfile.dev

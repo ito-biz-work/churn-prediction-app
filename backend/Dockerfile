@@ -10,8 +10,9 @@ WORKDIR /app
 RUN pip install uv
 
 COPY pyproject.toml uv.lock ./
-# 不要なキャッシュを削除し、システム全体にインストール
-RUN uv pip install --system --no-cache -r pyproject.toml
+# 不要なキャッシュを削除、開発用パッケージを除外
+# システム全体にインストール
+RUN uv pip install --system --no-cache --no-dev -r pyproject.toml
 
 COPY . .
 
