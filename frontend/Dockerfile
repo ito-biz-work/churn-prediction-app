@@ -4,10 +4,11 @@
 FROM node:22-slim AS builder
 WORKDIR /app
 
-# 依存関係のインストール
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+# 不要なキャッシュを削除、開発用パッケージを除外
+RUN pnpm install --frozen-lockfile --prod && \
+    pnpm store prune
 
 COPY . .
 RUN pnpm run build
