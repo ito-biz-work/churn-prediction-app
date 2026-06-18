@@ -7,7 +7,8 @@ RUN pip install uv
 
 # 仮想環境を作らず、直接インストールする
 COPY pyproject.toml uv.lock ./
-RUN uv pip install --system -r pyproject.toml
+RUN uv export --frozen --all-groups -o requirements.txt
+RUN uv pip install --system -r requirements.txt
 
 COPY . .
 
