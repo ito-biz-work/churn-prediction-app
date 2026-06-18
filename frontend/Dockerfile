@@ -6,8 +6,8 @@ WORKDIR /app
 
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
-# 不要なキャッシュを削除、開発用パッケージを除外
-RUN pnpm install --frozen-lockfile --prod && \
+# 不要なキャッシュを削除
+RUN pnpm install --frozen-lockfile && \
     pnpm store prune
 
 COPY . .
