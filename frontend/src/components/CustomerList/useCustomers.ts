@@ -18,8 +18,9 @@ export const useCustomers = () => {
       setLoading(true);
       try {
         const skip = (page - 1) * PAGE_SIZE;
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         const response = await fetch(
-          `http://localhost:8000/api/v1/customers?skip=${skip}&limit=${PAGE_SIZE}`
+          `${API_BASE_URL}/api/v1/customers?skip=${skip}&limit=${PAGE_SIZE}`
         );
         const data = await response.json();
         setTotalCount(data.totalCount);
