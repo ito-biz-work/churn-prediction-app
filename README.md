@@ -45,6 +45,10 @@ Dockerがインストールされていれば、以下のコマンドでフロ�
 git clone https://github.com/ito-biz-work/ubuntu-churn-prediction-app.git
 cd ubuntu-churn-prediction-app
 
-# 2. コンテナの起動
+# 2. 環境変数の準備（テンプレートをコピー）
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+
+# 3. コンテナの起動
 docker compose -f compose.prd.yaml up -d --build
 ```
