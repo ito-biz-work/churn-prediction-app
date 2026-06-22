@@ -15,7 +15,7 @@ export const usePrediction = (customer: Customer | null) => {
       setLoading(true);
       try {
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-        const response = await fetch(`http://${API_BASE_URL}/api/v1/predict`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/predict`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(customer),
