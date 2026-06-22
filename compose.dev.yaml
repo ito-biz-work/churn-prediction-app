@@ -12,6 +12,8 @@ services:
       - /app/backend/.venv # 念のため保護
     environment:
       - DATABASE_URL=sqlite:////app/data/churn.db # コンテナ内でのパスを指定
+    env_file:
+      - ./backend/.env
   
   frontend:
     image: churn-app-front:v1.0-dev
@@ -25,3 +27,5 @@ services:
     volumes:
       - ./frontend:/frontend # # コードの同期
       - /frontend/node_modules # コンテナ側のnode_modulesを保護
+    env_file:
+      - ./frontend/.env

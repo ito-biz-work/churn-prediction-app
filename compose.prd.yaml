@@ -10,6 +10,8 @@ services:
       - "8000:8000"
     environment:
       - WORKER_COUNT=1
+    env_file:
+      - ./backend/.env
 
   frontend:
     image: churn-app-front:v1.0-prd
@@ -21,3 +23,5 @@ services:
       - backend
     ports:
       - "80:80"
+    env_file:
+      - ./frontend/.env
