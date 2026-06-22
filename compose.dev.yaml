@@ -5,13 +5,16 @@ services:
     container_name: back-v1.0-dev
     build: 
       context: .
-      dockerfile: backend/Dockerfile.dev
-    ports: ["8000:8000"]
+      dockerfile: ./backend/Dockerfile.dev
+    ports:
+      - "8000:8000"
     volumes: 
       - .:/app # コードの同期
       - /app/backend/.venv # 念のため保護
     environment:
       - DATABASE_URL=sqlite:////app/data/churn.db # コンテナ内でのパスを指定
+    env_file:
+      - ./backend/.env
   
   frontend:
     image: churn-app-front:v1.0-dev
@@ -21,7 +24,10 @@ services:
       dockerfile: Dockerfile.dev
     depends_on:
       - backend
-    ports: ["5173:5173"] # Vite
+    ports:
+      - "5173:5173" # Vite
     volumes:
       - ./frontend:/frontend # # コードの同期
       - /frontend/node_modules # コンテナ側のnode_modulesを保護
+    env_file:
+      - ./frontend/.env
