@@ -14,7 +14,8 @@ export const usePrediction = (customer: Customer | null) => {
     const fetchPrediction = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/v1/predict", {
+        const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+        const response = await fetch(`http://${API_BASE_URL}/api/v1/predict`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(customer),
