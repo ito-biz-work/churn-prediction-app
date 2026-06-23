@@ -32,5 +32,6 @@ jobs:
         working-directory: ./frontend
         run: |
           corepack enable
+          corepack prepare pnpm@latest --activate
           pnpm install
           pnpm run lint
