@@ -17,8 +17,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'pnpm'
-          cache-dependency-path: ./frontend/pnpm-lock.yaml
 
       # Python のチェック
       - name: Run Ruff
@@ -32,6 +30,5 @@ jobs:
         working-directory: ./frontend
         run: |
           corepack enable
-          corepack prepare pnpm@latest --activate
           pnpm install
           pnpm run lint
