@@ -21,6 +21,7 @@ jobs:
 
       # React (TypeScript/Prettier) のチェック
       - name: Run Prettier
+        working-directory: ./frontend
         run: |
           npm install
           npx prettier --check .
