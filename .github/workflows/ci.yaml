@@ -10,17 +10,23 @@ jobs:
   lint-and-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Python (Ruff) のチェック
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      # Python のチェック
       - name: Run Ruff
         run: |
           pip install ruff
           ruff check .
           ruff format --check .
 
-      # React (TypeScript/Prettier) のチェック
-      - name: Run Prettier
+      # React (TypeScript) のチェック
+      - name: Run ESLint
         working-directory: ./frontend
         run: |
           corepack enable
