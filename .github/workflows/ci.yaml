@@ -1,0 +1,26 @@
+name: Lint & Format
+
+on:
+  push:
+    branches-ignore: [ main ] # PRとの重複防止
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Python (Ruff) のチェック
+      - name: Run Ruff
+        run: |
+          pip install ruff
+          ruff check .
+          ruff format --check .
+
+      # React (TypeScript/Prettier) のチェック
+      - name: Run Prettier
+        run: |
+          npm install
+          npx prettier --check .
