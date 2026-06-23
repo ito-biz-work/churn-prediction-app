@@ -17,6 +17,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+          cache: 'pnpm'
+          cache-dependency-path: ./frontend/pnpm-lock.yaml
+
+      # 依存関係のインストール
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
 
       # Python のチェック
       - name: Run Ruff
@@ -28,7 +37,4 @@ jobs:
       # React (TypeScript) のチェック
       - name: Run ESLint
         working-directory: ./frontend
-        run: |
-          corepack enable
-          pnpm install
-          npm run lint
+        run: npm run lint
