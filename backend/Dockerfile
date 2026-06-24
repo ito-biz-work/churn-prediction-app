@@ -18,16 +18,15 @@ RUN uv pip install --system --no-cache -r requirements.txt
 
 COPY . .
 
-# モデル生成とシードデータ投入を事前に行う
+# モデル生成を事前に行う
 # PYTHONPATH を設定して、/app をルートモジュールとして認識させる
-RUN PYTHONPATH=. python scripts/train_model.py && \
-    PYTHONPATH=. python backend/scripts/seed_db.py
+RUN PYTHONPATH=. python scripts/train_model.py
 
 # 権限設定: アプリケーションディレクトリの所有を変更
 RUN chown -R appuser:appuser /app
 USER appuser
 
 # 実行コマンド
-# --reloadを削除、本番向けのワーカー構成を追加
-# WORKER_COUNTが設定されていなければ1を使う
-CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers ${WORKER_COUNT:-1}"]
+# --reloadを削除、本番向けのワーカー構成（設定無しは1）を追加
+# データシード投入を行う
+CMD ["sh", "-c", "PYTHONPATH=. python backend/scripts/seed_db.py && uvicorn backend.main:app --host 0.0.0.0 --port 8000 --workers ${WORKER_COUNT:-1}"]
