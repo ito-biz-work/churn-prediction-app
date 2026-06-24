@@ -36,7 +36,7 @@ services:
 
   db:
     image: postgres:18.4
-    container_name: postgres-v2.0-dev
+    container_name: db-v2.0-dev
     ports:
       - "5432:5432"
     volumes:
