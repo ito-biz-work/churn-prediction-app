@@ -1,8 +1,6 @@
 name: Lint & Format
 
 on:
-  push:
-    branches-ignore: [ main ] # PRとの重複防止
   pull_request:
     branches: [ main ]
 
