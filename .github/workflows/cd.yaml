@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # アプリのディレクトリに移動
-            cd churn-prediction-app
+            cd /var/www/churn-prediction-app
             
             # 最新のコードを取得
             git pull origin main
