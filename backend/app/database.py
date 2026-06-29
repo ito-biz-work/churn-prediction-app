@@ -1,20 +1,15 @@
+import os
 from collections.abc import Generator
 
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session, sessionmaker
-
-from config.settings import DATA_DIR, DATABASE_NAME
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 # データベースファイルのパス
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATA_DIR}/{DATABASE_NAME}"
+SQLALCHEMY_DATABASE_URL = os.environ["DATABASE_URL"]
 
-# DBとの接続設定
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-
-# DBとのやり取りを行うセッションクラス
+# DBとの接続
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# セッション
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # モデルの親クラス
