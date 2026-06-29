@@ -42,4 +42,4 @@ jobs:
 
       # Python のテスト実行
       - name: Run Pytest
-        run: docker-compose -f compose.dev.yaml run --rm backend pytest
+        run: docker compose -f compose.dev.yaml run --rm backend pytest
