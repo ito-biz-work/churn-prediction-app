@@ -1,10 +1,11 @@
-name: Lint & Format
+name: CI
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
+  # 静的チェック
   lint-and-format:
     runs-on: ubuntu-latest
     steps:
@@ -30,3 +31,15 @@ jobs:
           corepack enable
           pnpm install
           pnpm run lint
+
+  # テスト実行
+  test:
+    needs: lint-and-format # 左記をpassしたら実行
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Python のテスト実行
+      - name: Run Pytest
+        run: docker-compose -f compose.dev.yaml run --rm backend pytest
