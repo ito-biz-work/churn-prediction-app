@@ -40,6 +40,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 環境変数ファイルを生成
+      - name: Create .env files
+        run: |
+          cp backend/.env.example backend/.env
+          cp .env.example .env
+
       # Python のテスト実行
       - name: Run Pytest
         run: docker compose -f compose.dev.yaml run --rm backend pytest
