@@ -1,27 +1,30 @@
+import os
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 from backend.app.database import Base, get_db
 from backend.app.models.customer_metrics import CustomerMetrics  # noqa: F401
 from backend.main import app
 
-# テスト用のDB（SQLiteのメモリモード）を作る
-# メモリ上に作ることで、毎回まっさらな状態でテストする
-TEST_DATABASE_URL = "sqlite:///:memory:"
-engine = create_engine(
-    TEST_DATABASE_URL, connect_args={"check_same_thread": False}, poolclass=StaticPool
-)
+# 環境変数からテスト用DBのURLを取得
+TEST_DATABASE_URL = os.getenv("DATABASE_URL")
+
+# エンジン作成
+engine = create_engine(TEST_DATABASE_URL)
 TestingSessionLocal = sessionmaker(bind=engine)
 
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
-    Base.metadata.create_all(bind=engine)  # テーブル作成
+    # テスト開始時にテーブルを初期化
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
     yield
-    Base.metadata.drop_all(bind=engine)  # 終わったら削除
+    # テスト終了時にテーブルを削除
+    Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture
