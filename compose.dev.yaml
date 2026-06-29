@@ -13,6 +13,7 @@ services:
       - /app/backend/.venv # 念のため保護
     depends_on:
       - db
+      - db-test
     environment:
       - "DATABASE_URL=postgresql+psycopg://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
     env_file:
@@ -46,6 +47,21 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
 
+  db-test:
+    image: postgres:18.4
+    container_name: db-v2.0-test
+    ports:
+      - "5433:5432" # 衝突を防ぐため、ホスト側のポートをずらす
+    volumes:
+      - postgres_data_test:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}_test # 「_test」を付けて区別
+
 volumes:
   postgres_data_dev:
     name: churn_postgres_data_dev
+
+  postgres_data_test:
+    name: churn_postgres_data_test
