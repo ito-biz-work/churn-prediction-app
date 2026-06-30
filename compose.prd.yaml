@@ -13,6 +13,7 @@ services:
       options:
         awslogs-region: "ap-northeast-1"
         awslogs-group: "churn-app-prd" 
+        awslogs-create-group: "true"
         awslogs-stream-prefix: "backend"
     depends_on:
       - db
@@ -37,6 +38,7 @@ services:
       options:
         awslogs-region: "ap-northeast-1"
         awslogs-group: "churn-app-prd"
+        awslogs-create-group: "true"
         awslogs-stream-prefix: "frontend"
     env_file:
       - ./frontend/.env
