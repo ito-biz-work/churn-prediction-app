@@ -10,6 +10,30 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 
+import mlflow
+from config.settings import BASE_DIR
+
+## 0. MLflowの設定
+
+# %%
+# MLflowの定数とURI設定
+MLFLOW_DIR = BASE_DIR / "mlflow"
+DB_PATH = MLFLOW_DIR / "mlflow.db"
+EXPERIMENT_NAME = "churn-prediction-experiment"
+ARTIFACT_DIR = MLFLOW_DIR / "artifacts"
+mlflow.set_tracking_uri(f"sqlite:////{DB_PATH}")  # 保存場所
+
+# %%
+# 最初の1回だけ実行する（あとはコメントアウト）
+# MLflow Artifactの保存先を指定してExperiment作成
+# mlflow.create_experiment(EXPERIMENT_NAME, artifact_location=f"file://{ARTIFACT_DIR}")
+
+# %%
+# MLflowの初期設定
+mlflow.set_experiment(EXPERIMENT_NAME)  # 実験名
+mlflow.sklearn.autolog()  # 自動ロギングの有効化
+
+
 ## 1. 探索的分析 EDA
 
 # %%
@@ -97,22 +121,31 @@ models = {
 
 result_all = []
 for name, model in models.items():
-    pipe = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
+    # モデルごとに新しい記録を開始する
+    with mlflow.start_run(run_name=f"CV_{name}"):
+        pipe = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
 
-    # 正解率/AUCを指標として、交差検証を実施
-    cv_results = cross_validate(
-        pipe, X_train, y_train, cv=cv, scoring=["accuracy", "roc_auc"]
-    )
+        # 正解率/AUCを指標として、交差検証を実施
+        cv_results = cross_validate(
+            pipe, X_train, y_train, cv=cv, scoring=["accuracy", "roc_auc"]
+        )
 
-    # 集計
-    results_df = pd.DataFrame(cv_results)
-    summary = {
-        "Model-Name": name,
-        "Accuracy-Mean": results_df["test_accuracy"].mean(),
-        "AUC-Mean": results_df["test_roc_auc"].mean(),
-        "Fit-Time-Sum": results_df["fit_time"].sum(),
-    }
-    result_all.append(summary)
+        # 集計
+        results_df = pd.DataFrame(cv_results)
+        mean_acc = results_df["test_accuracy"].mean()
+        mean_auc = results_df["test_roc_auc"].mean()
+
+        summary = {
+            "Model-Name": name,
+            "Accuracy-Mean": mean_acc,
+            "AUC-Mean": mean_auc,
+            "Fit-Time-Sum": results_df["fit_time"].sum(),
+        }
+        result_all.append(summary)
+
+        # 交差検証の平均スコアを記録
+        mlflow.log_metric("cv_accuracy_mean", mean_acc)
+        mlflow.log_metric("cv_auc_mean", mean_acc)
 
 # 結果を一括表示
 result_all_df = pd.DataFrame(result_all)
@@ -171,5 +204,3 @@ feature_importances_df = pd.DataFrame(
 print("--- 特徴量の重要度 ---")
 # print(feature_importances_df.head(10))  # 上位10個を表示
 print(feature_importances_df.head(7))  # 上位7個を表示
-
-# %%
