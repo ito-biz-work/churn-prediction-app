@@ -19,7 +19,6 @@ createRoot(document.getElementById("root")!).render(
         <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
           <App />
         </ErrorBoundary>
-        <App />
       </BrowserRouter>
     </Provider>
   </StrictMode>,
