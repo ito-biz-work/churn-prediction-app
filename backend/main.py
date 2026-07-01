@@ -24,8 +24,8 @@ async def log_requests(request: Request, call_next):
         response = await call_next(request)
         logger.info(f"Response: {response.status_code}")
         return response
-    except Exception as e:
-        logger.error(f"Error:{e}", exc_info=True)
+    except Exception:
+        logger.exception(f"Request failed: {request.method} {request.url.path}")
         raise
 
 
