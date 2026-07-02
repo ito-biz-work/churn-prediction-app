@@ -1,8 +1,14 @@
+import logging
+
 import pandas as pd
 
 from backend.app.database import engine
 from backend.app.models.customer_metrics import Base
-from config.settings import TABLE_NAME, TEST_SYNTHETIC_CSV
+from config.settings import TABLE_NAME, TEST_SYNTHETIC_CSV, setup_logger
+
+# ログ設定
+setup_logger()
+logger = logging.getLogger(__name__)
 
 
 def import_csv_to_db():
@@ -16,7 +22,7 @@ def import_csv_to_db():
     # Pandasのindexを除外
     df.to_sql(TABLE_NAME, con=engine, if_exists="replace", index=False)
 
-    print(f"成功: {len(df)} 件のデータをデータベースにインポートしました。")
+    logger.info(f"成功: {len(df)} 件のデータをデータベースにインポートしました")
 
 
 if __name__ == "__main__":
@@ -27,4 +33,4 @@ if __name__ == "__main__":
     # 初期データ投入
     import_csv_to_db()
 
-    print("データベースを初期化しました。")
+    logger.info("データベースを初期化しました")
