@@ -127,6 +127,10 @@ result_all = []
 for name, model in models.items():
     # モデルごとに新しい記録を開始する
     with mlflow.start_run(run_name=f"CV_{name}"):
+        # タグ登録
+        mlflow.set_tag("stage", "cv")
+        mlflow.set_tag("algorithm", name)
+
         pipe = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
 
         # 正解率/AUCを指標として、交差検証を実施
@@ -161,30 +165,46 @@ print(result_all_df)
 # %%
 # テスト
 # 一番スコアが良かったモデルを採用
-best_model_name = "RandomForest"
+
+# 自動：「AUC-Mean」が最大（一番スコアが良い）の行を探す
+best_row = result_all_df.loc[result_all_df["AUC-Mean"].idxmax()]
+best_model_name = best_row["Model-Name"]
+# 手動
+# best_model_name = "RandomForest"
+
 best_model = models[best_model_name]
 
-# 再度パイプラインを構築
-final_pipe = Pipeline(
-    [
-        ("preprocessor", preprocessor),
-        ("classifier", best_model),
-    ]
-)
+# 最終モデルの記録用に新しいRunを開始
+with mlflow.start_run(run_name=f"Final_{best_model_name}"):
+    # タグ登録
+    mlflow.set_tag("stage", "final")
+    mlflow.set_tag("algorithm", best_model_name)
 
-# 訓練データ全体で学習
-final_pipe.fit(X_train, y_train)
+    # 再度パイプラインを構築
+    final_pipe = Pipeline(
+        [
+            ("preprocessor", preprocessor),
+            ("classifier", best_model),
+        ]
+    )
 
-# テストデータで予測
-y_pred_classes = final_pipe.predict(X_test)
-y_pred_probs = final_pipe.predict_proba(X_test)[:, 1]
+    # 訓練データ全体で学習
+    final_pipe.fit(X_train, y_train)
 
-final_acc = accuracy_score(y_test, y_pred_classes)
-final_auc = roc_auc_score(y_test, y_pred_probs)
+    # テストデータで予測
+    y_pred_classes = final_pipe.predict(X_test)
+    y_pred_probs = final_pipe.predict_proba(X_test)[:, 1]
 
-print(f"--- テストデータ検証 {best_model_name} ---")
-print(f"Accuracy: {final_acc:.2f}")
-print(f"AUC : {final_auc:.2f}")
+    final_acc = accuracy_score(y_test, y_pred_classes)
+    final_auc = roc_auc_score(y_test, y_pred_probs)
+
+    print(f"--- テストデータ検証 {best_model_name} ---")
+    print(f"Accuracy: {final_acc:.2f}")
+    print(f"AUC : {final_auc:.2f}")
+
+    # テストデータの評価指標を記録
+    mlflow.log_metric("test_accuracy", final_acc)
+    mlflow.log_metric("test_auc", final_auc)
 
 # %%
 # 特徴量重要度
