@@ -11,16 +11,13 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 
 import mlflow
-from config.settings import BASE_DIR
+from config.settings import ARTIFACT_DIR, EXPERIMENT_NAME, MLFLOW_DB
 
 ## 0. MLflowの設定
 
 # %%
 # MLflowの定数とURI設定
-MLFLOW_DIR = BASE_DIR / "mlflow"
-DB_PATH = MLFLOW_DIR / "mlflow.db"
-EXPERIMENT_NAME = "churn-prediction-experiment"
-ARTIFACT_DIR = MLFLOW_DIR / "artifacts"
+DB_PATH = MLFLOW_DB
 mlflow.set_tracking_uri(f"sqlite:////{DB_PATH}")  # 保存場所
 
 # %%
