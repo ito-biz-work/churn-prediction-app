@@ -106,7 +106,7 @@ def train_and_save_model():
         mlflow.log_metric("test_auc", test_auc)
 
         logger.info(
-            f"学習完了 - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}"
+            f"学習が完了しました - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}"
         )
 
         # 親ディレクトリが存在しなければ作成する
@@ -115,7 +115,7 @@ def train_and_save_model():
 
         # 保存
         joblib.dump(pipe, model_path)
-        logger.info(f"Webアプリ用モデルを保存しました: {model_path}")
+        logger.info(f"WEBアプリ用モデルを保存しました: {model_path}")
 
 
 if __name__ == "__main__":
