@@ -198,13 +198,13 @@ with mlflow.start_run(run_name=f"Final_{best_model_name}"):
     final_acc = accuracy_score(y_test, y_pred_classes)
     final_auc = roc_auc_score(y_test, y_pred_probs)
 
-    print(f"--- テストデータ検証 {best_model_name} ---")
-    print(f"Accuracy: {final_acc:.2f}")
-    print(f"AUC : {final_auc:.2f}")
-
     # テストデータの評価指標を記録
     mlflow.log_metric("test_accuracy", final_acc)
     mlflow.log_metric("test_auc", final_auc)
+
+    print(f"--- テストデータ検証 {best_model_name} ---")
+    print(f"Accuracy: {final_acc:.2f}")
+    print(f"AUC : {final_auc:.2f}")
 
 # %%
 # 特徴量重要度
