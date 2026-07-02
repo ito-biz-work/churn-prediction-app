@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 import category_encoders as ce
@@ -17,12 +18,17 @@ from config.settings import (
     MLFLOW_DB,
     MODEL_JOBLIB,
     TRAIN_SYNTHETIC_CSV,
+    setup_logger,
 )
 
 # パス設定
 DATA_PATH = TRAIN_SYNTHETIC_CSV
 MODEL_PATH = MODEL_JOBLIB
 DB_PATH = MLFLOW_DB
+
+# ログ設定
+setup_logger()
+logger = logging.getLogger(__name__)
 
 # MLflow設定
 mlflow.set_tracking_uri(f"sqlite:////{DB_PATH}")  # 保存場所
@@ -84,7 +90,7 @@ def train_and_save_model():
     # MLflowの記録を開始
     with mlflow.start_run(run_name="Production_Training"):
         # 訓練データで学習
-        print("本番用モデルの学習を開始します")
+        logger.info("本番用モデルの学習を開始します")
         pipe.fit(X_train, y_train)
 
         # テストデータで評価を実施
@@ -99,7 +105,9 @@ def train_and_save_model():
         mlflow.log_metric("test_accuracy", test_acc)
         mlflow.log_metric("test_auc", test_auc)
 
-        print(f"学習完了 - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}")
+        logger.info(
+            f"学習完了 - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}"
+        )
 
         # 親ディレクトリが存在しなければ作成する
         model_path = Path(MODEL_PATH)
@@ -107,7 +115,7 @@ def train_and_save_model():
 
         # 保存
         joblib.dump(pipe, model_path)
-        print(f"Webアプリ用モデルを保存しました: {model_path}")
+        logger.info(f"Webアプリ用モデルを保存しました: {model_path}")
 
 
 if __name__ == "__main__":

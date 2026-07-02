@@ -1,3 +1,5 @@
+import logging
+import sys
 from pathlib import Path
 
 # プロジェクトルートを特定
@@ -28,3 +30,14 @@ MLFLOW_DB = MLFLOW_DIR / "mlflow.db"
 # name
 TABLE_NAME = "customer_metrics"
 EXPERIMENT_NAME = "churn-prediction-experiment"
+
+
+def setup_logger(level=logging.INFO):
+    """システム全体のログ設定を一元管理する関数"""
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout)  # 出力先を標準出力に明示
+        ],
+    )

@@ -5,8 +5,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.routers import router as api_router
+from config.settings import setup_logger
 
-logging.basicConfig(level=logging.INFO)
+# ログ設定
+setup_logger()
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
