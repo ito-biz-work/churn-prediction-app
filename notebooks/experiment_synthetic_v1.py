@@ -10,6 +10,30 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 
+import mlflow
+from config.settings import ARTIFACT_DIR, EXPERIMENT_NAME, MLFLOW_DB
+
+## 0. MLflowの設定
+
+# %%
+# MLflowの定数とURI設定
+DB_PATH = MLFLOW_DB
+mlflow.set_tracking_uri(f"sqlite:////{DB_PATH}")  # 保存場所
+
+# %%
+# エクスペリメントの存在チェックと作成
+experiment = mlflow.get_experiment_by_name(EXPERIMENT_NAME)
+if experiment is None:
+    mlflow.create_experiment(
+        EXPERIMENT_NAME, artifact_location=f"file://{ARTIFACT_DIR}"
+    )
+
+# %%
+# MLflowの初期設定
+mlflow.set_experiment(EXPERIMENT_NAME)  # 実験名
+mlflow.sklearn.autolog()  # 自動ロギングの有効化
+
+
 ## 1. 探索的分析 EDA
 
 # %%
@@ -43,6 +67,10 @@ y = df["churn"]
 
 # 目的変数を数値化する
 y = y.map({"no": 0, "yes": 1})
+
+# 整数型の列をfloat64に一括変換（MLflowの型エラー警告対策）
+int_cols = X.select_dtypes(include=["int64", "int32"]).columns
+X[int_cols] = X[int_cols].astype("float64")
 
 X_train, X_test, y_train, y_test = train_test_split(
     X,
@@ -97,22 +125,35 @@ models = {
 
 result_all = []
 for name, model in models.items():
-    pipe = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
+    # モデルごとに新しい記録を開始する
+    with mlflow.start_run(run_name=f"CV_{name}"):
+        # タグ登録
+        mlflow.set_tag("stage", "cv")
+        mlflow.set_tag("algorithm", name)
 
-    # 正解率/AUCを指標として、交差検証を実施
-    cv_results = cross_validate(
-        pipe, X_train, y_train, cv=cv, scoring=["accuracy", "roc_auc"]
-    )
+        pipe = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
 
-    # 集計
-    results_df = pd.DataFrame(cv_results)
-    summary = {
-        "Model-Name": name,
-        "Accuracy-Mean": results_df["test_accuracy"].mean(),
-        "AUC-Mean": results_df["test_roc_auc"].mean(),
-        "Fit-Time-Sum": results_df["fit_time"].sum(),
-    }
-    result_all.append(summary)
+        # 正解率/AUCを指標として、交差検証を実施
+        cv_results = cross_validate(
+            pipe, X_train, y_train, cv=cv, scoring=["accuracy", "roc_auc"]
+        )
+
+        # 集計
+        results_df = pd.DataFrame(cv_results)
+        mean_acc = results_df["test_accuracy"].mean()
+        mean_auc = results_df["test_roc_auc"].mean()
+
+        summary = {
+            "Model-Name": name,
+            "Accuracy-Mean": mean_acc,
+            "AUC-Mean": mean_auc,
+            "Fit-Time-Sum": results_df["fit_time"].sum(),
+        }
+        result_all.append(summary)
+
+        # 交差検証の平均スコアを記録
+        mlflow.log_metric("cv_accuracy_mean", mean_acc)
+        mlflow.log_metric("cv_auc_mean", mean_auc)
 
 # 結果を一括表示
 result_all_df = pd.DataFrame(result_all)
@@ -124,30 +165,46 @@ print(result_all_df)
 # %%
 # テスト
 # 一番スコアが良かったモデルを採用
-best_model_name = "RandomForest"
+
+# 自動：「AUC-Mean」が最大（一番スコアが良い）の行を探す
+best_row = result_all_df.loc[result_all_df["AUC-Mean"].idxmax()]
+best_model_name = best_row["Model-Name"]
+# 手動
+# best_model_name = "RandomForest"
+
 best_model = models[best_model_name]
 
-# 再度パイプラインを構築
-final_pipe = Pipeline(
-    [
-        ("preprocessor", preprocessor),
-        ("classifier", best_model),
-    ]
-)
+# 最終モデルの記録用に新しいRunを開始
+with mlflow.start_run(run_name=f"Final_{best_model_name}"):
+    # タグ登録
+    mlflow.set_tag("stage", "final")
+    mlflow.set_tag("algorithm", best_model_name)
 
-# 訓練データ全体で学習
-final_pipe.fit(X_train, y_train)
+    # 再度パイプラインを構築
+    final_pipe = Pipeline(
+        [
+            ("preprocessor", preprocessor),
+            ("classifier", best_model),
+        ]
+    )
 
-# テストデータで予測
-y_pred_classes = final_pipe.predict(X_test)
-y_pred_probs = final_pipe.predict_proba(X_test)[:, 1]
+    # 訓練データ全体で学習
+    final_pipe.fit(X_train, y_train)
 
-final_acc = accuracy_score(y_test, y_pred_classes)
-final_auc = roc_auc_score(y_test, y_pred_probs)
+    # テストデータで予測
+    y_pred_classes = final_pipe.predict(X_test)
+    y_pred_probs = final_pipe.predict_proba(X_test)[:, 1]
 
-print(f"--- テストデータ検証 {best_model_name} ---")
-print(f"Accuracy: {final_acc:.2f}")
-print(f"AUC : {final_auc:.2f}")
+    final_acc = accuracy_score(y_test, y_pred_classes)
+    final_auc = roc_auc_score(y_test, y_pred_probs)
+
+    print(f"--- テストデータ検証 {best_model_name} ---")
+    print(f"Accuracy: {final_acc:.2f}")
+    print(f"AUC : {final_auc:.2f}")
+
+    # テストデータの評価指標を記録
+    mlflow.log_metric("test_accuracy", final_acc)
+    mlflow.log_metric("test_auc", final_auc)
 
 # %%
 # 特徴量重要度
@@ -171,5 +228,3 @@ feature_importances_df = pd.DataFrame(
 print("--- 特徴量の重要度 ---")
 # print(feature_importances_df.head(10))  # 上位10個を表示
 print(feature_importances_df.head(7))  # 上位7個を表示
-
-# %%

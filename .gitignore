@@ -28,3 +28,6 @@ data/raw/
 # Model files
 *.pkl
 *.joblib
+
+# MLflow
+mlflow/
