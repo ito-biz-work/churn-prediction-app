@@ -95,6 +95,10 @@ def train_and_save_model():
         test_acc = accuracy_score(y_test, y_pred)
         test_auc = roc_auc_score(y_test, y_pred_probs)
 
+        # 指標の記録
+        mlflow.log_metric("test_accuracy", test_acc)
+        mlflow.log_metric("test_auc", test_auc)
+
         print(f"学習完了 - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}")
 
         # 親ディレクトリが存在しなければ作成する
