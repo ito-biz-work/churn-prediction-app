@@ -5,6 +5,8 @@ import joblib
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, roc_auc_score
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
@@ -63,6 +65,11 @@ def train_and_save_model():
     int_cols = X.select_dtypes(include=["int64", "int32"]).columns
     X[int_cols] = X[int_cols].astype("float64")
 
+    # データ分割
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
     # パイプライン構築
     clf = RandomForestClassifier(
         n_estimators=100, random_state=42, class_weight="balanced"
@@ -76,9 +83,19 @@ def train_and_save_model():
 
     # MLflowの記録を開始
     with mlflow.start_run(run_name="Production_Training"):
-        # 学習
-        print("学習中...")
-        pipe.fit(X, y)
+        # 訓練データで学習
+        print("本番用モデルの学習を開始します")
+        pipe.fit(X_train, y_train)
+
+        # テストデータで評価を実施
+        y_pred = pipe.predict(X_test)
+        y_pred_probs = pipe.predict_proba(X_test)[:, 1]
+
+        # 指標の計算
+        test_acc = accuracy_score(y_test, y_pred)
+        test_auc = roc_auc_score(y_test, y_pred_probs)
+
+        print(f"学習完了 - Test Accuracy: {test_acc:.2f}, Test AUC: {test_auc:.2f}")
 
         # 親ディレクトリが存在しなければ作成する
         model_path = Path(MODEL_PATH)
@@ -86,7 +103,7 @@ def train_and_save_model():
 
         # 保存
         joblib.dump(pipe, model_path)
-        print(f"モデルを保存しました: {model_path}")
+        print(f"Webアプリ用モデルを保存しました: {model_path}")
 
 
 if __name__ == "__main__":
