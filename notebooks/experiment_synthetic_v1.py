@@ -68,6 +68,10 @@ y = df["churn"]
 # 目的変数を数値化する
 y = y.map({"no": 0, "yes": 1})
 
+# 整数型の列をfloat64に一括変換（MLflowの型エラー警告対策）
+int_cols = X.select_dtypes(include=["int64", "int32"]).columns
+X[int_cols] = X[int_cols].astype("float64")
+
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
