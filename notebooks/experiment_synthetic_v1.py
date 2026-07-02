@@ -145,7 +145,7 @@ for name, model in models.items():
 
         # 交差検証の平均スコアを記録
         mlflow.log_metric("cv_accuracy_mean", mean_acc)
-        mlflow.log_metric("cv_auc_mean", mean_acc)
+        mlflow.log_metric("cv_auc_mean", mean_auc)
 
 # 結果を一括表示
 result_all_df = pd.DataFrame(result_all)
