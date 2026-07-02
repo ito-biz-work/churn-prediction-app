@@ -24,9 +24,12 @@ ARTIFACT_DIR = MLFLOW_DIR / "artifacts"
 mlflow.set_tracking_uri(f"sqlite:////{DB_PATH}")  # 保存場所
 
 # %%
-# 最初の1回だけ実行する（あとはコメントアウト）
-# MLflow Artifactの保存先を指定してExperiment作成
-# mlflow.create_experiment(EXPERIMENT_NAME, artifact_location=f"file://{ARTIFACT_DIR}")
+# エクスペリメントの存在チェックと作成
+experiment = mlflow.get_experiment_by_name(EXPERIMENT_NAME)
+if experiment is None:
+    mlflow.create_experiment(
+        EXPERIMENT_NAME, artifact_location=f"file://{ARTIFACT_DIR}"
+    )
 
 # %%
 # MLflowの初期設定
