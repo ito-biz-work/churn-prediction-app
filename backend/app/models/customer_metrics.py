@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Float, Integer, String
+from sqlalchemy import Column, DateTime, Float, Integer, String
+from sqlalchemy.sql import func
 
 from backend.app.database import Base
 from config.settings import TABLE_NAME
@@ -9,6 +10,15 @@ class CustomerMetrics(Base):
 
     # データベース用のユニークID（主キー）
     id = Column(Integer, primary_key=True, index=True)
+
+    # システム項目
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), onupdate=func.now(), server_default=func.now()
+    )
+
+    # 退会確率
+    churn_probability = Column(Float, nullable=True)
 
     # 画面表示用のダミー情報
     customer_code = Column(String)

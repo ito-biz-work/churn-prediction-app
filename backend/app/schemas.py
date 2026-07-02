@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -68,6 +69,13 @@ class PredictionOutput(BaseSchema):
 
 class Customer(BaseSchema):
     id: int
+
+    # --- システム項目 ---
+    created_at: datetime
+    updated_at: datetime
+
+    # --- 退会確率 ---
+    churn_probability: float | None = None
 
     # --- 顧客属性 ---
     customer_name: str
