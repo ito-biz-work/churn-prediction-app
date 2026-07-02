@@ -45,7 +45,7 @@ def main():
 
     # 保存
     app_data.to_csv(OUTPUT_PATH, index=False)
-    logger.info(f"データ生成が完了しました: {OUTPUT_PATH}")
+    logger.info(f"WEBアプリ用疑似データ生成が完了しました: {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
