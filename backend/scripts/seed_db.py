@@ -20,7 +20,7 @@ def import_csv_to_db():
 
     # 書き込み
     # Pandasのindexを除外
-    df.to_sql(TABLE_NAME, con=engine, if_exists="replace", index=False)
+    df.to_sql(TABLE_NAME, con=engine, if_exists="append", index=False)
 
     logger.info(f"成功: {len(df)} 件のデータをデータベースにインポートしました")
 
