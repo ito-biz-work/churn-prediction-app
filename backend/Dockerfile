@@ -18,6 +18,9 @@ RUN uv pip install --system --no-cache -r requirements.txt
 
 COPY . .
 
+# 自作アプリ全体をPythonライブラリとして登録（本番用にコードを固定）
+RUN uv pip install --system -e .
+
 # モデル生成を事前に行う
 # PYTHONPATH を設定して、/app をルートモジュールとして認識させる
 RUN PYTHONPATH=. python scripts/train_model.py

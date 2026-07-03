@@ -13,5 +13,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 COPY . .
 
+# 自作アプリ全体をPythonライブラリとして登録（コード変更は即時反映）
+RUN uv pip install --system -e .
+
 # 実行
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
