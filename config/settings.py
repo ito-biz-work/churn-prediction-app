@@ -1,9 +1,14 @@
 import logging
+import os
 import sys
 from pathlib import Path
 
-# プロジェクトルートを特定
-BASE_DIR = Path(__file__).resolve().parent.parent
+# プロジェクトルートを取得（環境変数があれば優先、なければ自動計算）
+env_app_dir = os.environ.get("APP_DIR")
+if env_app_dir:
+    BASE_DIR = Path(env_app_dir)
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ディレクトリのパス
 DATA_DIR = BASE_DIR / "data"

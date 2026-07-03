@@ -6,6 +6,9 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 WORKDIR /app
 
+# 環境変数
+ENV APP_DIR=/app
+
 # CRONのインストール
 RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
 
