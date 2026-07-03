@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from backend.app.core import get_customers, get_prediction
+from backend.app.core import get_prediction
+from backend.app.crud import get_customers
 from backend.app.database import get_db
 from backend.app.schemas import CustomerListOutput, PredictionInput, PredictionOutput
 
