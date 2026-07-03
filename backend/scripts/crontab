@@ -1,0 +1,6 @@
+# パス設定
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# コンテナ内で毎日AM2時に一括予測のシェルスクリプトを実行
+0 2 * * * /app/backend/scripts/run_bulk_prediction.sh > /proc/1/fd/1 2>&1
