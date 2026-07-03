@@ -8,6 +8,7 @@ from sqlalchemy import update
 from backend.app.core import predict_churn_probability
 from backend.app.database import SessionLocal, engine
 from backend.app.models.customer_metrics import CustomerMetrics
+from backend.app.prediction import predict_churn_probability
 from backend.app.schemas import PredictionInput
 from config.settings import setup_logger
 
