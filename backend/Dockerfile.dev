@@ -3,6 +3,9 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# CRONのインストール
+RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
+
 RUN pip install uv
 
 # 仮想環境を作らず、直接インストールする
@@ -16,5 +19,11 @@ COPY . .
 # 自作アプリ全体をPythonライブラリとして登録（コード変更は即時反映）
 RUN uv pip install --system -e .
 
+# カスタム設定ファイルをコンテナのCRONシステムに登録
+COPY backend/scripts/crontab /etc/cron.d/bulk-predict-cron
+RUN chmod 0644 /etc/cron.d/bulk-predict-cron
+RUN crontab /etc/cron.d/bulk-predict-cron
+
 # 実行
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# CRON起動、uvicorn起動
+CMD ["sh", "-c", "cron && exec uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"]
