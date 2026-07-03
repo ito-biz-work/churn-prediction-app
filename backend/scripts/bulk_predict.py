@@ -5,7 +5,6 @@ import pandas as pd
 from pydantic import TypeAdapter
 from sqlalchemy import update
 
-from backend.app.core import predict_churn_probability
 from backend.app.database import SessionLocal, engine
 from backend.app.models.customer_metrics import CustomerMetrics
 from backend.app.prediction import predict_churn_probability
@@ -17,9 +16,9 @@ setup_logger()
 logger = logging.getLogger(__name__)
 
 
-def run_bulk_prediction():
+def bulk_predict():
     """DB内の顧客データを全件取得し、一括で退会予測を行って結果を更新する"""
-    logger.info("一括予測バッチ処理を開始します")
+    logger.info("一括予測処理を開始します")
 
     try:
         with closing(SessionLocal()) as db:
@@ -56,11 +55,11 @@ def run_bulk_prediction():
             db.execute(update(CustomerMetrics), update_data)
             db.commit()
 
-        logger.info("一括予測バッチ処理が正常に終了しました")
+        logger.info("一括予測処理が正常に終了しました")
 
     except Exception:
-        logger.exception("一括予測バッチ処理中にエラーが発生しました")
+        logger.exception("一括予測処理中にエラーが発生しました")
 
 
 if __name__ == "__main__":
-    run_bulk_prediction()
+    bulk_predict()
