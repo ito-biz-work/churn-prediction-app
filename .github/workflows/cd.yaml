@@ -35,10 +35,22 @@ jobs:
       - name: Wait for containers to start
         run: sleep 10
 
-      # APIを叩いて、200が返ってくるか確認
       - name: Run Smoke Test
         run: |
           STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
           if [ "$STATUS_CODE" -ne 200 ]; then
             exit 1
           fi
+      
+      # APIを叩いて、200が返ってくるか確認
+      - name: Run Smoke Test
+        run: |
+          # 1回失敗しても5秒間隔でリトライ（最大10回）
+          for i in {1..10}; do
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
+            if [ "$STATUS_CODE" -eq 200 ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1
