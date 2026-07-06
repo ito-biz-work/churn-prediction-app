@@ -35,22 +35,32 @@ jobs:
       - name: Wait for containers to start
         run: sleep 10
 
-      - name: Run Smoke Test
-        run: |
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
-          if [ "$STATUS_CODE" -ne 200 ]; then
-            exit 1
-          fi
-      
       # APIを叩いて、200が返ってくるか確認
       - name: Run Smoke Test
+        shell: bash
         run: |
           # 1回失敗しても5秒間隔でリトライ（最大10回）
-          for i in {1..10}; do
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
-            if [ "$STATUS_CODE" -eq 200 ]; then
-              exit 0
-            fi
-            sleep 5
-          done
-          exit 1
+          # for i in {1..10}; do
+          #   STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
+          #   if [ "$STATUS_CODE" -eq 200 ]; then
+          #     exit 0
+          #   fi
+          #   sleep 5
+          # done
+          # exit 1
+
+          # IP部分だけを確認（IPそのものは出さない）
+          echo "Connecting to target..."
+          
+          # 成功したかどうかの判定用
+          RESPONSE=$(curl -I -s http://${{ secrets.PRD_IP }}/api/v1/health)
+          echo "Response Headers:"
+          echo "$RESPONSE"
+          
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
+          echo "Status Code: $STATUS_CODE"
+          
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Health check failed!"
+            exit 1
+          fi
