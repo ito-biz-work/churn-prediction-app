@@ -11,6 +11,7 @@ router = APIRouter()
 
 @router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
 def predict(data: PredictionInput):
+    """退会確率を予測"""
     return get_prediction(data)
 
 
@@ -20,4 +21,5 @@ def list_customers(
     skip: int = Query(0, ge=0, description="スキップする件数"),
     limit: int = Query(5, gt=0, description="取得する件数"),
 ):
+    """指定した範囲の顧客データと総件数を取得する"""
     return get_customers(db, skip=skip, limit=limit)

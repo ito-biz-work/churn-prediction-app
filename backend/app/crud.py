@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from backend.app.models.customer_metrics import CustomerMetrics
 
 
-def get_customers(db: Session, skip: int = 0, limit: int = 5):
+def get_customers(db: Session, skip: int, limit: int):
     """指定した範囲の顧客データと総件数を取得する"""
     total_count = db.query(CustomerMetrics).count()
     target_customers = db.query(CustomerMetrics).offset(skip).limit(limit).all()
