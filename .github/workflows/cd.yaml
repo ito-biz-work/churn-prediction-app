@@ -39,28 +39,18 @@ jobs:
       - name: Run Smoke Test
         shell: bash
         run: |
-          # 1回失敗しても5秒間隔でリトライ（最大10回）
-          # for i in {1..10}; do
-          #   STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
-          #   if [ "$STATUS_CODE" -eq 200 ]; then
-          #     exit 0
-          #   fi
-          #   sleep 5
-          # done
-          # exit 1
-
-          # IP部分だけを確認（IPそのものは出さない）
-          echo "Connecting to target..."
+          # 失敗しても5秒間隔でリトライ（最大10回）
+          for i in {1..10}; do
+            echo "Attempt $i: Checking health..."
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/v1/health)
+            if [ "$STATUS_CODE" -eq 200 ]; then
+              echo "Server is ready!"
+              exit 0 # 200なら成功して終了
+            fi
+            echo "Status $STATUS_CODE, retrying in 5 seconds..."
+            sleep 5
+          done
           
-          # 成功したかどうかの判定用
-          RESPONSE=$(curl -I -s http://${{ secrets.PRD_IP }}/api/v1/health)
-          echo "Response Headers:"
-          echo "$RESPONSE"
-          
-          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
-          echo "Status Code: $STATUS_CODE"
-          
-          if [ "$STATUS_CODE" -ne 200 ]; then
-            echo "Health check failed!"
-            exit 1
-          fi
+          # 10回失敗
+          echo "Server failed to start after 10 attempts."
+          exit 1
