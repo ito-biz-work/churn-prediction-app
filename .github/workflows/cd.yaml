@@ -25,7 +25,20 @@ jobs:
             
             # Dockerイメージのビルドとコンテナの再起動
             # バックグラウンドでビルドし、コンテナを入れ替え
-            docker compose -f compose.prd.yaml up -d --build
+            # 変更がないコンテナも、強制的に新しく作り直して起動する
+            docker compose -f compose.prd.yaml up -d --build --force-recreate
             
             # 古いイメージを削除
             docker image prune -f
+
+      # コンテナが完全に立ち上がるまで10秒待つ
+      - name: Wait for containers to start
+        run: sleep 10
+
+      # APIを叩いて、200が返ってくるか確認
+      - name: Run Smoke Test
+        run: |
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}/api/v1/health)
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            exit 1
+          fi
