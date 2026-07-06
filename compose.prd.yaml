@@ -1,4 +1,13 @@
 # --- 本番用 たたき台
+
+# 共通のログ設定
+x-logging-base: &default-logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"  # 10MBでローテーション
+      max-file: "3"    # 過去3世代分まで
+
 services:
   backend:
     image: churn-app-back:v2.0-prd
@@ -8,14 +17,7 @@ services:
       dockerfile: ./backend/Dockerfile
     ports:
       - "8000:8000"
-    logging:
-      driver: "awslogs"
-      options:
-        awslogs-region: "ap-northeast-1"
-        awslogs-group: "churn-app-prd" 
-        awslogs-create-group: "true"
-        # ECSだとハイフン(awslogs-stream-prefix)
-        awslogs-stream_prefix: "backend"
+    <<: *default-logging
     depends_on:
       - db
     environment:
@@ -34,25 +36,14 @@ services:
       - backend
     ports:
       - "80:80"
-    logging:
-      driver: "awslogs"
-      options:
-        awslogs-region: "ap-northeast-1"
-        awslogs-group: "churn-app-prd"
-        awslogs-create-group: "true"
-        # ECSだとハイフン(awslogs-stream-prefix)
-        awslogs-stream_prefix: "frontend"
+    <<: *default-logging
     env_file:
       - ./frontend/.env
 
   db:
     image: postgres:18.4
     container_name: db-v2.0-prd
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    <<: *default-logging
     volumes:
       - postgres_data_prd:/var/lib/postgresql
     environment:
