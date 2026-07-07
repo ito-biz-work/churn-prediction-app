@@ -11,7 +11,7 @@ def get_customers(db: Session, skip: int, limit: int):
     total_count = stmt.count()
     target_customers = (
         stmt.order_by(
-            CustomerMetrics.churn_probability.desc(),
+            CustomerMetrics.churn_probability.desc().nulls_last(),
             CustomerMetrics.id.asc(),
         )
         .offset(skip)
