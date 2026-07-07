@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.routers import router as api_router
-from config.settings import setup_logger
+from config.settings import API_VERSION, setup_logger
 
 # ログ設定
 setup_logger()
@@ -44,4 +44,4 @@ app.add_middleware(
 )
 
 # APIルーターの登録
-app.include_router(api_router, prefix="/api/v1")
+app.include_router(api_router, prefix=f"/api/{API_VERSION}")

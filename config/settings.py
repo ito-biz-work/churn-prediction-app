@@ -3,6 +3,17 @@ import os
 import sys
 from pathlib import Path
 
+# ==========================================
+# システム定数
+# ==========================================
+API_VERSION = "v2"
+
+TABLE_NAME = "customer_metrics"
+EXPERIMENT_NAME = "churn-prediction-experiment"
+
+# ==========================================
+# パス定義
+# ==========================================
 # プロジェクトルートを取得（環境変数があれば優先、なければ自動計算）
 env_app_dir = os.environ.get("APP_DIR")
 if env_app_dir:
@@ -33,11 +44,10 @@ TEST_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "test.csv"
 MODEL_JOBLIB = ML_MODEL_DIR / "model.joblib"
 MLFLOW_DB = MLFLOW_DIR / "mlflow.db"
 
-# name
-TABLE_NAME = "customer_metrics"
-EXPERIMENT_NAME = "churn-prediction-experiment"
 
-
+# ==========================================
+# ログ設定
+# ==========================================
 def setup_logger(level=logging.INFO):
     """システム全体のログ設定を一元管理する関数"""
     logging.basicConfig(
