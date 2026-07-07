@@ -1,6 +1,13 @@
 export interface Customer {
   id: number;
 
+  // --- システム項目 ---
+  createdAt: string;
+  updatedAt: string;
+
+  // --- 退会確率 ---
+  churnProbability: number;
+
   // --- 顧客属性 ---
   customerName: string;
   customerCode: string;
