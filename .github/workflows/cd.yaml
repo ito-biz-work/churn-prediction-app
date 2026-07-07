@@ -31,10 +31,6 @@ jobs:
             # 古いイメージを削除
             docker image prune -f
 
-      # コンテナが完全に立ち上がるまで10秒待つ
-      - name: Wait for containers to start
-        run: sleep 10
-
       # APIを叩いて、200が返ってくるか確認
       - name: Run Smoke Test
         shell: bash
