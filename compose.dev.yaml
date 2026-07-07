@@ -58,6 +58,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      PSQL_PAGER: "" # less起動OFF
 
   db-test:
     image: postgres:18.4
