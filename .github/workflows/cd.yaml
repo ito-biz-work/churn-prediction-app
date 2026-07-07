@@ -40,7 +40,7 @@ jobs:
           # 失敗しても5秒間隔でリトライ（最大10回）
           for i in {1..10}; do
             echo "Attempt $i: Checking health..."
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/${API_VERSION}/health)
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/${API_VERSION}/health || true)
             if [ "$STATUS_CODE" -eq 200 ]; then
               echo "Server is ready!"
               exit 0 # 200なら成功して終了
