@@ -30,7 +30,7 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
                 shadow="sm"
                 onClick={() => onSelect(customer)}
               >
-                予測
+                詳細
               </Button>
             </Table.Cell>
           </Table.Row>
