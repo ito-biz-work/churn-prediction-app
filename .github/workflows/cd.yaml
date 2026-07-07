@@ -31,18 +31,16 @@ jobs:
             # 古いイメージを削除
             docker image prune -f
 
-      # コンテナが完全に立ち上がるまで10秒待つ
-      - name: Wait for containers to start
-        run: sleep 10
-
       # APIを叩いて、200が返ってくるか確認
       - name: Run Smoke Test
         shell: bash
+        env:
+          API_VERSION: v2
         run: |
           # 失敗しても5秒間隔でリトライ（最大10回）
           for i in {1..10}; do
             echo "Attempt $i: Checking health..."
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/v1/health)
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/${API_VERSION}/health)
             if [ "$STATUS_CODE" -eq 200 ]; then
               echo "Server is ready!"
               exit 0 # 200なら成功して終了

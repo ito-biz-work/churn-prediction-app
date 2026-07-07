@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { API_VERSION } from "@/config/constants";
 import { type Customer } from "@/types/customer";
 
 const PAGE_SIZE = 5;
+const INITIAL_PAGE = "1";
 
 export const useCustomers = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,7 +13,7 @@ export const useCustomers = () => {
   const [loading, setLoading] = useState(true);
 
   // URLのpageパラメータを数値として取得
-  const page = parseInt(searchParams.get("page") || "1", 10);
+  const page = parseInt(searchParams.get("page") || INITIAL_PAGE);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -20,7 +22,7 @@ export const useCustomers = () => {
         const skip = (page - 1) * PAGE_SIZE;
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
         const response = await fetch(
-          `${API_BASE_URL}/api/v1/customers?skip=${skip}&limit=${PAGE_SIZE}`
+          `${API_BASE_URL}/api/${API_VERSION}/customers?skip=${skip}&limit=${PAGE_SIZE}`
         );
         const data = await response.json();
         setTotalCount(data.totalCount);

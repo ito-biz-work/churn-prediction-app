@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config.settings import TEST_SYNTHETIC_CSV
+from config.settings import API_VERSION, TEST_SYNTHETIC_CSV
 
 
 def test_predict_endpoint_success(client):
@@ -16,7 +16,7 @@ def test_predict_endpoint_success(client):
     # 含まれない不要な列がある場合は、ここでポップ（削除）してあげます
     # test_input.pop("id", None)
 
-    response = client.post("/api/v1/predict", json=test_input)
+    response = client.post(f"/api/{API_VERSION}/predict", json=test_input)
 
     # 検証
     assert response.status_code == 200

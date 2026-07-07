@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_VERSION } from "@/config/constants";
 import { type Customer } from "@/types/customer";
 
 export const usePrediction = (customer: Customer | null) => {
@@ -15,7 +16,7 @@ export const usePrediction = (customer: Customer | null) => {
       setLoading(true);
       try {
         const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-        const response = await fetch(`${API_BASE_URL}/api/v1/predict`, {
+        const response = await fetch(`${API_BASE_URL}/api/${API_VERSION}/predict`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(customer),
