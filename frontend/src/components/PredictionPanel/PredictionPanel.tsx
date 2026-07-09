@@ -1,5 +1,5 @@
 import { Box, Text, Spinner, Flex, Heading } from "@chakra-ui/react";
-import { usePrediction } from "./usePrediction";
+// import { usePrediction } from "./usePrediction";
 import { ProbabilityCard } from "./ProbabilityCard";
 import { CustomerDetails } from "./CustomerDetails";
 import { type Customer } from "@/types/customer";
@@ -23,7 +23,8 @@ export default function PredictionPanel({
 }: {
   customer: Customer | null;
 }) {
-  const { prediction, loading } = usePrediction(customer);
+  // const { prediction, loading } = usePrediction(customer);
+  const loading = false; // 仮
 
   return (
     <PanelContainer>
@@ -38,10 +39,10 @@ export default function PredictionPanel({
         >
           <Spinner size="lg" />
         </Box>
-      ) : !customer || !prediction ? (
+      ) : !customer ? (
         // 未選択・データなしの表示
         <Text color="fg.subtle" fontWeight="medium" textAlign="center">
-          顧客を選択すると、ここに予測結果が表示されます。
+          顧客を選択すると、ここに詳細が表示されます。
         </Text>
       ) : (
         // 結果表示
@@ -52,7 +53,7 @@ export default function PredictionPanel({
               対象顧客: {customer.customerName} 様
             </Text>
           </Flex>
-          <ProbabilityCard probability={prediction.probability} />
+          <ProbabilityCard probability={customer.churnProbability} />
           <CustomerDetails customer={customer} />
         </>
       )}
