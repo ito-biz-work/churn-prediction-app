@@ -13,10 +13,11 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
         <Table.Row>
           <Table.ColumnHeader color="fg.muted">ID</Table.ColumnHeader>
           <Table.ColumnHeader color="fg.muted">氏名</Table.ColumnHeader>
-          <Table.ColumnHeader color="fg.muted">顧客コード</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話時間（昼）</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話時間（夕）</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話時間（夜）</Table.ColumnHeader>
           <Table.ColumnHeader color="fg.muted">契約期間</Table.ColumnHeader>
           <Table.ColumnHeader color="fg.muted">退会確率</Table.ColumnHeader>
-          <Table.ColumnHeader color="fg.muted">更新日時</Table.ColumnHeader>
           <Table.ColumnHeader />
         </Table.Row>
       </Table.Header>
@@ -25,15 +26,14 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
           <Table.Row key={customer.id}>
             <Table.Cell>{customer.id}</Table.Cell>
             <Table.Cell>{customer.customerName}</Table.Cell>
-            <Table.Cell>{customer.customerCode}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalDayMinutes} 分`}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalEveMinutes} 分`}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalNightMinutes} 分`}</Table.Cell>
             <Table.Cell textAlign="right">{`${customer.accountLength} ヶ月`}</Table.Cell>
             <Table.Cell textAlign={customer.churnProbability != null ? 'right' : 'center'}>
               {customer.churnProbability != null 
                 ? `${(customer.churnProbability * 100).toFixed(0)} %`
                 : '-'}
-            </Table.Cell>
-            <Table.Cell>
-              {new Date(customer.updatedAt).toLocaleString('ja-JP')}
             </Table.Cell>
             <Table.Cell textAlign="end">
               <Button

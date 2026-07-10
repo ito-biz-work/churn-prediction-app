@@ -15,7 +15,6 @@ export const ChargeSlider = ({ label, value, onChange }: ChargeSliderProps) => {
       step={0.1} 
       onValueChange={(e) => onChange(e.value[0])}
       mb={4}
-      size="sm"
       colorPalette="cyan"
     >
       <Slider.Label display="flex" justifyContent="space-between" mb={1}>

@@ -30,7 +30,7 @@ export default function PredictionPanel({ customer }: { customer: Customer | nul
       ) : (
         <>
           <Flex align="center" justify="space-between" mb={3} mr={3}>
-            <Heading size="lg">退会確率</Heading>
+            <Heading size="lg">退会確率シミュレータ</Heading>
             <Text fontSize="sm" color="fg.subtle">対象顧客: {customer.customerName} 様</Text>
           </Flex>
 
