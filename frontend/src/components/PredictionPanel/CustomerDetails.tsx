@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Box, Flex, Text, DataList } from "@chakra-ui/react";
 import { type Customer } from "@/types/customer";
 import { ChargeSlider } from "./ChargeSlider";
@@ -23,15 +23,14 @@ export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) 
     { label: "夜間", value: `${customer.totalNightMinutes} 分` },
   ];
 
-  const isInitialMount = useRef(true);
-
   // ステートを監視してデバウンス処理
   useEffect(() => {
-    // 初回レンダリング時はAPIを叩かないようにする
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+    // 初期状態（すべてのスライダーが初期値のまま）なら何もせず終了
+    if (
+      dayCharge === customer.totalDayCharge &&
+      eveCharge === customer.totalEveCharge &&
+      nightCharge === customer.totalNightCharge
+    ) return;
     
     // シミュレーションを実行する関数
     const timerId = setTimeout(() => {
