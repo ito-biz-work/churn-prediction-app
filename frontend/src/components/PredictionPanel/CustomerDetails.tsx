@@ -34,7 +34,7 @@ export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) 
     }
     
     // シミュレーションを実行する関数
-    const handleSimulate = setTimeout(() => {
+    const timerId = setTimeout(() => {
       onSimulate(customer, {
         dayCharge,
         eveCharge,
@@ -43,7 +43,7 @@ export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) 
     }, 500);
 
     // 0.5秒以内にステートが更新されたら、前のタイマーを破棄
-    return () => clearTimeout(handleSimulate);
+    return () => clearTimeout(timerId);
   }, [dayCharge, eveCharge, nightCharge, customer, onSimulate]);
 
   return (
