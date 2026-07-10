@@ -34,20 +34,26 @@ export default function PredictionPanel({ customer }: { customer: Customer | nul
             <Text fontSize="sm" color="fg.subtle">対象顧客: {customer.customerName} 様</Text>
           </Flex>
 
-          {/* ロード中と表示の切り替え */}
-          {loading ? (
-            <Box minH="200px" display="flex" alignItems="center" justifyContent="center">
-              <Spinner size="lg" />
-            </Box>
-          ) : (
-            <>
-              <ProbabilityCard probability={displayProbability} />
-              <CustomerDetails 
-                customer={customer} 
-                onSimulate={runSimulation} 
-              />
-            </>
-          )}
+          <Box position="relative">
+            {loading && (
+              <Box 
+                position="absolute" 
+                top={0} left={0} right={0} bottom={0} 
+                bg="whiteAlpha.700" 
+                display="flex" alignItems="center" justifyContent="center"
+                zIndex={1}
+              >
+                <Spinner size="lg" />
+              </Box>
+            )}
+            <ProbabilityCard probability={displayProbability} />
+          </Box>
+
+          <CustomerDetails 
+            key={customer.id}
+            customer={customer} 
+            onSimulate={runSimulation} 
+          />
         </>
       )}
     </PanelContainer>
