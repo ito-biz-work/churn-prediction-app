@@ -42,7 +42,7 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
                 shadow="sm"
                 onClick={() => onSelect(customer)}
               >
-                詳細
+                選択
               </Button>
             </Table.Cell>
           </Table.Row>

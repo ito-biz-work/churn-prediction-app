@@ -26,7 +26,7 @@ export default function PredictionPanel({ customer }: { customer: Customer | nul
   return (
     <PanelContainer>
       {!customer ? (
-        <Text color="fg.subtle" textAlign="center">顧客を選択すると、ここに詳細が表示されます。</Text>
+        <Text color="fg.subtle" textAlign="center">一覧から顧客を選択してください。</Text>
       ) : (
         <>
           <Flex align="center" justify="space-between" mb={3} mr={3}>
