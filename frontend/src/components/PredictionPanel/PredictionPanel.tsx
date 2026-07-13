@@ -1,6 +1,6 @@
 import { Box, Text, Spinner, Flex, Heading } from "@chakra-ui/react";
 import { ProbabilityCard } from "./ProbabilityCard";
-import { CustomerDetails } from "./CustomerDetails";
+import { SimulatorForm } from "./SimulatorForm";
 import { usePrediction } from "./usePrediction";
 import { type Customer } from "@/types/customer";
 
@@ -49,7 +49,7 @@ export default function PredictionPanel({ customer }: { customer: Customer | nul
             <ProbabilityCard probability={displayProbability} />
           </Box>
 
-          <CustomerDetails 
+          <SimulatorForm 
             key={customer.id}
             customer={customer} 
             onSimulate={runSimulation} 

@@ -3,7 +3,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { type Customer } from "@/types/customer";
 import { MinutesSlider } from "./MinutesSlider";
 
-interface CustomerDetailsProps {
+interface SimulatorFormProps {
   customer: Customer;
   onSimulate: (
     customer: Customer,
@@ -11,7 +11,7 @@ interface CustomerDetailsProps {
   ) => Promise<void>;
 }
 
-export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) => {
+export const SimulatorForm = ({ customer, onSimulate }: SimulatorFormProps) => {
   // customerの値を初期値としてセット
   const [dayMinutes, setDayMinutes] = useState(customer.totalDayMinutes);
   const [eveMinutes, setEveMinutes] = useState(customer.totalEveMinutes);
