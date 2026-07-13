@@ -24,7 +24,10 @@ function App() {
           <CustomerList onSelect={setSelectedCustomer} />
         </Box>
         <Box flex="1" display="flex" flexDirection="column">
-          <PredictionPanel customer={selectedCustomer} />
+          <PredictionPanel
+            key={selectedCustomer?.id ?? "empty"}
+            customer={selectedCustomer}
+          />
         </Box>
       </Flex>
 
