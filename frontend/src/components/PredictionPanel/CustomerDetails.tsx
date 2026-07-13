@@ -1,43 +1,43 @@
 import { useState, useEffect } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { type Customer } from "@/types/customer";
-import { ChargeSlider } from "./ChargeSlider";
+import { MinutesSlider } from "./MinutesSlider";
 
 interface CustomerDetailsProps {
   customer: Customer;
   onSimulate: (
     customer: Customer,
-    params: { dayCharge: number; eveCharge: number; nightCharge: number }
+    params: { dayMinutes: number; eveMinutes: number; nightMinutes: number }
   ) => Promise<void>;
 }
 
 export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) => {
   // customerの値を初期値としてセット
-  const [dayCharge, setDayCharge] = useState(customer.totalDayCharge);
-  const [eveCharge, setEveCharge] = useState(customer.totalEveCharge);
-  const [nightCharge, setNightCharge] = useState(customer.totalNightCharge);
+  const [dayMinutes, setDayMinutes] = useState(customer.totalDayMinutes);
+  const [eveMinutes, setEveMinutes] = useState(customer.totalEveMinutes);
+  const [nightMinutes, setNightMinutes] = useState(customer.totalNightMinutes);
 
   // ステートを監視してデバウンス処理
   useEffect(() => {
     // 初期状態（すべてのスライダーが初期値のまま）なら何もせず終了
     if (
-      dayCharge === customer.totalDayCharge &&
-      eveCharge === customer.totalEveCharge &&
-      nightCharge === customer.totalNightCharge
+      dayMinutes === customer.totalDayMinutes &&
+      eveMinutes === customer.totalEveMinutes &&
+      nightMinutes === customer.totalNightMinutes
     ) return;
     
     // シミュレーションを実行する関数
     const timerId = setTimeout(() => {
       onSimulate(customer, {
-        dayCharge,
-        eveCharge,
-        nightCharge,
+        dayMinutes,
+        eveMinutes,
+        nightMinutes,
       });
     }, 500);
 
     // 0.5秒以内にステートが更新されたら、前のタイマーを破棄
     return () => clearTimeout(timerId);
-  }, [dayCharge, eveCharge, nightCharge, customer, onSimulate]);
+  }, [dayMinutes, eveMinutes, nightMinutes, customer, onSimulate]);
 
   return (
     <Box
@@ -48,14 +48,14 @@ export const CustomerDetails = ({ customer, onSimulate }: CustomerDetailsProps) 
     >
       <Box bg="bg.muted" p={3} borderBottomWidth="1px" borderColor="border">
         <Flex align="center" justify="space-between">
-          <Text fontWeight="semibold" fontSize="sm" color="fg.muted">通話料金</Text>
+          <Text fontWeight="semibold" fontSize="sm" color="fg.muted">通話時間</Text>
         </Flex>
       </Box>
       <Box p={4}>
         {/* スライダー */}
-        <ChargeSlider label="昼" value={dayCharge} onChange={setDayCharge} />
-        <ChargeSlider label="夕" value={eveCharge} onChange={setEveCharge} />
-        <ChargeSlider label="夜" value={nightCharge} onChange={setNightCharge} />
+        <MinutesSlider label="昼" value={dayMinutes} onChange={setDayMinutes} />
+        <MinutesSlider label="夕" value={eveMinutes} onChange={setEveMinutes} />
+        <MinutesSlider label="夜" value={nightMinutes} onChange={setNightMinutes} />
       </Box>
     </Box>
   );

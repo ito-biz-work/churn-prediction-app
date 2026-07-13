@@ -11,9 +11,9 @@ export const usePrediction = () => {
   const [loading, setLoading] = useState(false);
 
   const runSimulation = useCallback(async (customer: Customer, params: {
-    dayCharge: number;
-    eveCharge: number;
-    nightCharge: number;
+    dayMinutes: number;
+    eveMinutes: number;
+    nightMinutes: number;
   }) => {
     setLoading(true);
     try {
@@ -23,9 +23,9 @@ export const usePrediction = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...customer,
-          totalDayCharge: params.dayCharge,
-          totalEveCharge: params.eveCharge,
-          totalNightCharge: params.nightCharge,
+          totalDayMinutes: params.dayMinutes,
+          totalEveMinutes: params.eveMinutes,
+          totalNightMinutes: params.nightMinutes,
         }),
       });
       
