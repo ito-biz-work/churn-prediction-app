@@ -2,8 +2,8 @@ import { Box, Text } from "@chakra-ui/react";
 
 export const ProbabilityCard = ({ probability }: { probability: number }) => {
   const getProbabilityColor = (prob: number) => {
-    if (prob >= 0.8) return "red.solid";
-    if (prob >= 0.4) return "yellow.focusRing";
+    if (prob >= 0.6) return "red.solid";
+    if (prob >= 0.3) return "yellow.focusRing";
     return "green.solid";
   };
 

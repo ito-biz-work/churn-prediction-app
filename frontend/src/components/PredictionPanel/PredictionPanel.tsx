@@ -1,7 +1,7 @@
 import { Box, Text, Spinner, Flex, Heading } from "@chakra-ui/react";
-import { usePrediction } from "./usePrediction";
 import { ProbabilityCard } from "./ProbabilityCard";
-import { CustomerDetails } from "./CustomerDetails";
+import { SimulatorForm } from "./SimulatorForm";
+import { usePrediction } from "./usePrediction";
 import { type Customer } from "@/types/customer";
 
 // ラッパーの用意
@@ -18,42 +18,42 @@ const PanelContainer = ({ children }: { children: React.ReactNode }) => (
   </Box>
 );
 
-export default function PredictionPanel({
-  customer,
-}: {
-  customer: Customer | null;
-}) {
-  const { prediction, loading } = usePrediction(customer);
+export default function PredictionPanel({ customer }: { customer: Customer | null }) {
+  const { prediction, loading, runSimulation } = usePrediction();
+  // 予測結果がある場合はそれを使用
+  const displayProbability = prediction?.probability ?? customer?.churnProbability ?? 0;
 
   return (
     <PanelContainer>
-      {loading ? (
-        // ローディング中の表示
-        <Box
-          flex="1"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          minH="50vh"
-        >
-          <Spinner size="lg" />
-        </Box>
-      ) : !customer || !prediction ? (
-        // 未選択・データなしの表示
-        <Text color="fg.subtle" fontWeight="medium" textAlign="center">
-          顧客を選択すると、ここに予測結果が表示されます。
-        </Text>
+      {!customer ? (
+        <Text color="fg.subtle" textAlign="center">一覧から顧客を選択してください。</Text>
       ) : (
-        // 結果表示
         <>
           <Flex align="center" justify="space-between" mb={3} mr={3}>
-            <Heading size="lg">退会確率</Heading>
-            <Text fontSize="sm" color="fg.subtle">
-              対象顧客: {customer.customerName} 様
-            </Text>
+            <Heading size="lg">退会確率シミュレータ</Heading>
+            <Text fontSize="sm" color="fg.subtle">対象顧客: {customer.customerName} 様</Text>
           </Flex>
-          <ProbabilityCard probability={prediction.probability} />
-          <CustomerDetails customer={customer} />
+
+          <Box position="relative">
+            {loading && (
+              <Box 
+                position="absolute" 
+                top={0} left={0} right={0} bottom={0} 
+                bg="whiteAlpha.700" 
+                display="flex" alignItems="center" justifyContent="center"
+                zIndex={1}
+              >
+                <Spinner size="lg" />
+              </Box>
+            )}
+            <ProbabilityCard probability={displayProbability} />
+          </Box>
+
+          <SimulatorForm 
+            key={customer.id}
+            customer={customer} 
+            onSimulate={runSimulation} 
+          />
         </>
       )}
     </PanelContainer>

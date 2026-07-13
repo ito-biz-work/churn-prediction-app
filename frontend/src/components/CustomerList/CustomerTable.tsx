@@ -13,9 +13,10 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
         <Table.Row>
           <Table.ColumnHeader color="fg.muted">ID</Table.ColumnHeader>
           <Table.ColumnHeader color="fg.muted">氏名</Table.ColumnHeader>
-          <Table.ColumnHeader color="fg.muted">顧客コード</Table.ColumnHeader>
-          <Table.ColumnHeader color="fg.muted">登録日時</Table.ColumnHeader>
-          <Table.ColumnHeader color="fg.muted">更新日時</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話料金（昼）</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話料金（夕）</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">通話料金（夜）</Table.ColumnHeader>
+          <Table.ColumnHeader color="fg.muted">契約期間</Table.ColumnHeader>
           <Table.ColumnHeader color="fg.muted">退会確率</Table.ColumnHeader>
           <Table.ColumnHeader />
         </Table.Row>
@@ -25,16 +26,13 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
           <Table.Row key={customer.id}>
             <Table.Cell>{customer.id}</Table.Cell>
             <Table.Cell>{customer.customerName}</Table.Cell>
-            <Table.Cell>{customer.customerCode}</Table.Cell>
-            <Table.Cell>
-              {new Date(customer.createdAt).toLocaleString('ja-JP')}
-            </Table.Cell>
-            <Table.Cell>
-              {new Date(customer.updatedAt).toLocaleString('ja-JP')}
-            </Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalDayCharge} ドル`}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalEveCharge} ドル`}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.totalNightCharge} ドル`}</Table.Cell>
+            <Table.Cell textAlign="right">{`${customer.accountLength} ヶ月`}</Table.Cell>
             <Table.Cell textAlign={customer.churnProbability != null ? 'right' : 'center'}>
               {customer.churnProbability != null 
-                ? `${customer.churnProbability.toFixed(2)} %`
+                ? `${(customer.churnProbability * 100).toFixed(0)} %`
                 : '-'}
             </Table.Cell>
             <Table.Cell textAlign="end">
@@ -44,7 +42,7 @@ export const CustomerTable = ({ customers, onSelect }: CustomerTableProps) => {
                 shadow="sm"
                 onClick={() => onSelect(customer)}
               >
-                詳細
+                選択
               </Button>
             </Table.Cell>
           </Table.Row>
