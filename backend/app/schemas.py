@@ -79,7 +79,6 @@ class Customer(BaseSchema):
 
     # --- 顧客属性 ---
     customer_name: str
-    customer_code: str
     state: str
     area_code: str
     account_length: int

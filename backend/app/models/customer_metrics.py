@@ -21,7 +21,6 @@ class CustomerMetrics(Base):
     churn_probability = Column(Float, nullable=True)
 
     # 画面表示用のダミー情報
-    customer_code = Column(String)
     customer_name = Column(String)
 
     # 顧客属性
