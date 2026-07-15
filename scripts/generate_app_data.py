@@ -23,15 +23,13 @@ faker_jp = Faker("ja_JP")
 
 def add_dummy_info(df):
     num_row = len(df)
-    df["id"] = range(1, num_row + 1)
-    df["customer_code"] = [f"USR-{10000 + i}" for i in range(num_row)]
     df["customer_name"] = [faker_jp.name() for _ in range(num_row)]
 
-    # 追加列を左端に配置
-    cols = ["id", "customer_code", "customer_name"] + [
-        c for c in df.columns if c not in ["id", "customer_code", "customer_name"]
-    ]
-    return df[cols]  # 新しいDFを返す
+    head = ["customer_name"]
+    others = [c for c in df.columns if c not in head]
+
+    # 追加列を左端に配置した新しいDFを返す
+    return df[head + others]
 
 
 def main():
