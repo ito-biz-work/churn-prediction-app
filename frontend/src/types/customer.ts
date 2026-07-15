@@ -10,7 +10,6 @@ export interface Customer {
 
   // --- 顧客属性 ---
   customerName: string;
-  customerCode: string;
   state: string;
   areaCode: string;
   accountLength: number;

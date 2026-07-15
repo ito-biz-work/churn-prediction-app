@@ -9,7 +9,7 @@ class CustomerMetrics(Base):
     __tablename__ = TABLE_NAME
 
     # データベース用のユニークID（主キー）
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
 
     # システム項目
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -21,7 +21,6 @@ class CustomerMetrics(Base):
     churn_probability = Column(Float, nullable=True)
 
     # 画面表示用のダミー情報
-    customer_code = Column(String)
     customer_name = Column(String)
 
     # 顧客属性
