@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from backend.app.crud import check_db_health, get_customers
+from backend.app.crud import check_db, get_customers
 from backend.app.database import get_db
 from backend.app.prediction import get_prediction
 from backend.app.schemas import CustomerListOutput, PredictionInput, PredictionOutput
@@ -25,8 +25,14 @@ def list_customers(
     return get_customers(db, skip=skip, limit=limit)
 
 
-@router.get("/health", tags=["System"])
-def health_check(db: Session = Depends(get_db)):
+@router.get("/health/app", tags=["System"])
+def health_check_app():
+    """アプリ単体のヘルスチェック"""
+    return {"status": "ok"}
+
+
+@router.get("/health/db", tags=["System"])
+def health_check_db(db: Session = Depends(get_db)):
     """データベースの生存確認を含めたヘルスチェック"""
-    check_db_health(db)
+    check_db(db)
     return {"status": "ok"}

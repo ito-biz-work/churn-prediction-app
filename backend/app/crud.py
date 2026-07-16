@@ -21,6 +21,6 @@ def get_customers(db: Session, skip: int, limit: int):
     return {"total_count": total_count, "items": target_customers}
 
 
-def check_db_health(db: Session):
+def check_db(db: Session):
     """DB接続を確認する（失敗時はそのまま例外を投げる）"""
     db.execute(text("SELECT 1"))
