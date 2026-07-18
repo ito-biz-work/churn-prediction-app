@@ -26,8 +26,6 @@ services:
       - db-test
     environment:
       - "DATABASE_URL=postgresql+psycopg://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
-    env_file:
-      - ./backend/.env
   
   frontend:
     image: churn-app-front:v2.0-dev

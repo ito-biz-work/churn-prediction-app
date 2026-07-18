@@ -13,5 +13,6 @@ dist
 .DS_Store
 
 # Environment
-.env
+.env*
+!.env.example
 *.log
