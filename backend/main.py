@@ -1,5 +1,4 @@
 import logging
-import os
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -31,9 +30,8 @@ async def log_requests(request: Request, call_next):
         raise
 
 
-# Reactアプリが動くURLを許可
-allowed_origins_raw = os.environ.get("CORS_ALLOWED_ORIGINS")
-origins = allowed_origins_raw.split(",")  # 文字列から配列に分解
+# 開発環境（ローカル）のViteのURLを許可
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
