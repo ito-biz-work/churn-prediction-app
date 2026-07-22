@@ -43,7 +43,9 @@ def client():
             db.close()
 
     app.dependency_overrides[get_db] = override_get_db
-    yield TestClient(app)
+    # with 文を使うことで startup イベント (lifespan) が起動
+    with TestClient(app) as test_client:
+        yield test_client
     app.dependency_overrides.clear()  # 終わったら差し替えを解除
 
 
@@ -51,7 +53,7 @@ def client():
 def mock_ml_model():
     """本物のモデルファイルの代わりに、ダミーの予測結果を返す"""
     with patch("joblib.load") as mock_load:
-        # get_pipeline() 経由で取得されるオブジェクトのモック
+        # アプリ起動時に app.state に読み込まれるダミーモデル
         mock_pipe = mock_load.return_value
 
         # pipe.classes_ が[0, 1] を返すように

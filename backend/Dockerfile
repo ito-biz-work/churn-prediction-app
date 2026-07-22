@@ -24,9 +24,6 @@ COPY . .
 # 自作アプリ全体をPythonライブラリとして登録（本番用にコードを固定）
 RUN uv pip install --system .
 
-# モデル生成を事前に行う
-RUN python scripts/train_model.py
-
 # 権限設定: アプリケーションディレクトリの所有を変更
 RUN chown -R appuser:appuser /app
 USER appuser

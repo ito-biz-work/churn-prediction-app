@@ -11,6 +11,8 @@ API_VERSION = "v2"
 TABLE_NAME = "customer_metrics"
 EXPERIMENT_NAME = "churn-prediction-experiment"
 
+ML_MODEL_NAME = "model.joblib"
+
 # ==========================================
 # パス定義
 # ==========================================
@@ -41,7 +43,7 @@ TRAIN_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "train.csv"
 TEST_RAW_CSV = RAW_DATA_DIR / "test.csv"
 TEST_SYNTHETIC_CSV = SYNTHETIC_DATA_DIR / "test.csv"
 
-MODEL_JOBLIB = ML_MODEL_DIR / "model.joblib"
+MODEL_JOBLIB = ML_MODEL_DIR / ML_MODEL_NAME
 MLFLOW_DB = MLFLOW_DIR / "mlflow.db"
 
 

@@ -7,7 +7,7 @@ from sqlalchemy import update
 
 from backend.app.database import SessionLocal, engine
 from backend.app.models.customer_metrics import CustomerMetrics
-from backend.app.prediction import predict_churn_probability
+from backend.app.prediction import load_pipeline, predict_churn_probability
 from backend.app.schemas import PredictionInput
 from config.settings import setup_logger
 
@@ -45,7 +45,8 @@ def bulk_predict():
         )
 
         # 一括予測
-        probabilities = predict_churn_probability(X_predict)
+        pipe = load_pipeline()  # モデルをロード（S3/ローカル）
+        probabilities = predict_churn_probability(X_predict, pipe)
 
         # 一括更新
         df["churn_probability"] = probabilities
