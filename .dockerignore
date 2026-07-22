@@ -1,20 +1,47 @@
-# Git
-.git
+# ==========================================
+# Docker Build & Git
+# ==========================================
+.git/
 .gitignore
+.dockerignore
+README.md
+docs/
 
-# Python
-__pycache__
-*.pyc
-*.egg-info
+# ==========================================
+# Environments & Secrets
+# ==========================================
+.env*
+!.env.example
 
-# Node.js
-node_modules
+# ==========================================
+# Backend (Python / ML)
+# ==========================================
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info/
+.venv/
+*.log
+.ipynb_checkpoints/
+data/
+*.db
+*.pkl
+*.joblib
+mlflow/
 
-# 仮想環境とローカル環境設定
-.venv
-.env
+# ==========================================
+# Frontend (Node / Vite)
+# ==========================================
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+.vite/
 
-# OS/エディタ
+# ==========================================
+# OS / IDE
+# ==========================================
+.vscode/
+.idea/
 .DS_Store
-.vscode
-.idea
