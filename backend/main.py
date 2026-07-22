@@ -29,6 +29,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Churn Prediction API",
     description="顧客の解約確率を予測する機械学習API",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json",
     lifespan=lifespan,
 )
 

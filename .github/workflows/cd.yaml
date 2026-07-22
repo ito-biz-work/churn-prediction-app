@@ -1,9 +1,12 @@
 name: CD (Deploy to EC2)
 
+# 一時的に自動デプロイをOFF
+# on:
+#   push:
+#     branches:
+#       - main
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
