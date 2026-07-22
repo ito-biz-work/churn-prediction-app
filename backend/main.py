@@ -1,8 +1,10 @@
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
+from backend.app.prediction import load_pipeline
 from backend.app.routers import router as api_router
 from config.settings import API_VERSION, setup_logger
 
@@ -10,9 +12,24 @@ from config.settings import API_VERSION, setup_logger
 setup_logger()
 logger = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """FastAPIのライフスパンイベントで、サーバー起動時と停止時の処理を定義"""
+    # サーバー起動時にモデルをロードして app.state に保存
+    logger.info("サーバーを起動しています: 機械学習モデルをロード中")
+    app.state.pipeline = load_pipeline()
+    logger.info("機械学習モデルのロードが正常に完了しました")
+    yield
+    # サーバー停止時のクリーンアップ処理
+    logger.info("サーバーを停止しています")
+    app.state.pipeline = None
+
+
 app = FastAPI(
     title="Churn Prediction API",
     description="顧客の解約確率を予測する機械学習API",
+    lifespan=lifespan,
 )
 
 

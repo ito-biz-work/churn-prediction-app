@@ -3,16 +3,16 @@ from sqlalchemy.orm import Session
 
 from backend.app.crud import check_db, get_customers
 from backend.app.database import get_db
-from backend.app.prediction import get_prediction
+from backend.app.prediction import get_pipeline, get_prediction
 from backend.app.schemas import CustomerListOutput, PredictionInput, PredictionOutput
 
 router = APIRouter()
 
 
 @router.post("/predict", response_model=PredictionOutput, tags=["Prediction"])
-def predict(data: PredictionInput):
+def predict(data: PredictionInput, pipe: Session = Depends(get_pipeline)):
     """退会確率を予測"""
-    return get_prediction(data)
+    return get_prediction(data, pipe)
 
 
 @router.get("/customers", response_model=CustomerListOutput, tags=["Customers"])
