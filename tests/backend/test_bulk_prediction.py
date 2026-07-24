@@ -13,6 +13,7 @@ def test_run_bulk_prediction_sh_success():
         ["bash", str(SCRIPT_PATH)],
         capture_output=True,  # 出力の録画機能をON（保存）
         text=True,  # 出力を文字列として扱う
+        check=False,  # エラー時に例外を発生させない
     )
 
     # 検証

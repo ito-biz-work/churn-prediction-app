@@ -1,40 +1,80 @@
-name: CD (Deploy to EC2)
+name: CD (Deploy to S3/CloudFront & ECS)
 
-# 一時的に自動デプロイをOFF
-# on:
-#   push:
-#     branches:
-#       - main
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # OIDC認証のために必要
+  contents: read  # コードのチェックアウトに必要
+
+env:
+  AWS_REGION: ap-northeast-1                        # リージョン
+  AWS_ROLE_ARN: arn:aws:iam::158709926442:role/churn-app-v2-GitHubActions-DeployRole # IAMロールARN
+
+  # ECS (バックエンド)
+  ECR_REPOSITORY: churn-app-ecr-v2                  # ECRリポジトリ名
+  ECS_CLUSTER: churn-app-ecs-cluster-v2             # ECSクラスター名
+  ECS_SERVICE: churn-app-ecs-backend-service-v2     # ECSサービス名
+  ECS_TASK_DEFINITION_FAMILY: churn-app-ecs-backend-task-v2 # タスク定義ファミリー名
+  CONTAINER_NAME: churn-app-ecs-backend-container-v2        # コンテナ名
+
+  # フロントエンド
+  S3_FRONTEND_BUCKET_NAME: churn-app-s3-frontend-v2-158709926442-ap-northeast-1-an # S3バケット名
+  CLOUDFRONT_DISTRIBUTION_ID: E1DT8X4N1WG2B9        # CloudFrontディストリビューションID
 
 jobs:
-  deploy:
+  # -------------------------------------------------------------
+  # 1. バックエンド（FastAPI）のビルド & ECSデプロイ
+  # -------------------------------------------------------------
+  deploy-backend:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: deployer
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            # アプリのディレクトリに移動
-            cd /var/www/churn-prediction-app
-            
-            # 最新のコードを取得
-            git pull origin main
-            
-            # Dockerイメージのビルドとコンテナの再起動
-            # バックグラウンドでビルドし、コンテナを入れ替え
-            # 変更がないコンテナも、強制的に新しく作り直して起動する
-            docker compose -f compose.prd.yaml up -d --build --force-recreate
-            
-            # 古いイメージを削除
-            docker image prune -f
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # APIを叩いて、200が返ってくるか確認
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # ECRへのログイン
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Dockerイメージのビルド & ECRへのプッシュ
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      # AWS上の最新のタスク定義を取得し、新しいイメージID（タグ）に更新
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition-family: ${{ env.ECS_TASK_DEFINITION_FAMILY }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      # ECSサービスの更新
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+      # ヘルスチェック（スモークテスト）
       - name: Run Smoke Test
         shell: bash
         env:
@@ -43,7 +83,7 @@ jobs:
           # 失敗しても5秒間隔でリトライ（最大10回）
           for i in {1..10}; do
             echo "Attempt $i: Checking health..."
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.PRD_IP }}:8000/api/${API_VERSION}/health/db || true)
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ secrets.PRD_DOMAIN }}/api/${API_VERSION}/health/db || true)
             if [ "$STATUS_CODE" -eq 200 ]; then
               echo "Server is ready!"
               exit 0 # 200なら成功して終了
@@ -52,6 +92,50 @@ jobs:
             sleep 5
           done
           
-          # 10回失敗
           echo "Server failed to start after 10 attempts."
           exit 1
+
+  # -------------------------------------------------------------
+  # 2. フロントエンド（React）のビルド & S3/CloudFrontデプロイ
+  # -------------------------------------------------------------
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm' # パッケージ管理に合わせて yarn や pnpm に変更可
+
+      - name: Install dependencies & Build
+        env:
+          VITE_API_BASE_URL: ""
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # S3への同期（不要な古いファイルを削除する）
+      - name: Sync to S3
+        run: |
+          aws s3 sync ./dist s3://${{ env.S3_FRONTEND_BUCKET_NAME }} --delete
+
+      # CloudFrontのキャッシュ削除
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"

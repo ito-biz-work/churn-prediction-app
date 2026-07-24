@@ -29,7 +29,7 @@ data/
 *.db
 *.pkl
 *.joblib
-mlflow/
+mlflow_logs/
 
 # ==========================================
 # Frontend (Node / Vite)
