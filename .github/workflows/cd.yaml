@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write # OIDC認証のために必要
-  contents: read  # コードのチェックアウトに必要
-
 env:
   AWS_REGION: ap-northeast-1                        # リージョン
   AWS_ROLE_ARN: arn:aws:iam::158709926442:role/churn-app-v2-GitHubActions-DeployRole # IAMロールARN
@@ -30,6 +26,10 @@ jobs:
   # -------------------------------------------------------------
   deploy-backend:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC認証のために必要
+      contents: read  # コードのチェックアウトに必要
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -110,6 +110,9 @@ jobs:
     defaults:
       run:
         working-directory: ./frontend
+    permissions:
+      id-token: write # OIDC認証のために必要
+      contents: read  # コードのチェックアウトに必要
 
     steps:
       - name: Checkout repository
