@@ -7,14 +7,18 @@ on:
   #     - main
 
 env:
-  AWS_REGION: ap-northeast-1                         # リージョン
-  ECR_REPOSITORY: churn-app-ecr-v2                   # ECRのリポジトリ名
-  ECS_CLUSTER: churn-app-ecs-cluster-v2              # ECSのクラスター名
-  ECS_SERVICE: churn-app-ecs-backend-service-v2      # ECSのサービス名
-  CONTAINER_NAME: churn-app-ecs-backend-container-v2 # タスク定義内のコンテナ名
-  ECS_TASK_DEFINITION: .aws/task-definition.json     # タスク定義ファイルのパス
-  S3_FRONTEND_BUCKET_NAME: churn-app-s3-frontend-v2-158709926442-ap-northeast-1-an # S3のバケット名
-  CLOUDFRONT_DISTRIBUTION_ID: E1DT8X4N1WG2B9         # CloudFrontのディストリビューションID
+  AWS_REGION: ap-northeast-1                        # リージョン
+
+  # ECS (バックエンド)
+  ECR_REPOSITORY: churn-app-ecr-v2                  # ECRリポジトリ名
+  ECS_CLUSTER: churn-app-ecs-cluster-v2             # ECSクラスター名
+  ECS_SERVICE: churn-app-ecs-backend-service-v2     # ECSサービス名
+  ECS_TASK_DEFINITION_FAMILY: churn-app-ecs-backend-task-v2 # タスク定義ファミリー名
+  CONTAINER_NAME: churn-app-ecs-backend-container-v2        # コンテナ名
+
+  # フロントエンド
+  S3_FRONTEND_BUCKET_NAME: churn-app-s3-frontend-v2-158709926442-ap-northeast-1-an # S3バケット名
+  CLOUDFRONT_DISTRIBUTION_ID: E1DT8X4N1WG2B9        # CloudFrontディストリビューションID
 
 jobs:
   # -------------------------------------------------------------
@@ -49,12 +53,12 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # タスク定義内のイメージタグを新しいものに更新
+      # AWS上の最新のタスク定義を取得し、新しいイメージID（タグ）に更新
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          task-definition-family: ${{ env.ECS_TASK_DEFINITION_FAMILY }}
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
