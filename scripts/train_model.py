@@ -3,6 +3,7 @@ from pathlib import Path
 
 import category_encoders as ce
 import joblib
+import mlflow
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
@@ -11,7 +12,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-import mlflow
 from config.settings import (
     ARTIFACT_DIR,
     EXPERIMENT_NAME,

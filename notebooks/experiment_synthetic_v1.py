@@ -1,5 +1,6 @@
 # %%
 import category_encoders as ce
+import mlflow
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.dummy import DummyClassifier
@@ -10,7 +11,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
 
-import mlflow
 from config.settings import ARTIFACT_DIR, EXPERIMENT_NAME, MLFLOW_DB
 
 ## 0. MLflowの設定

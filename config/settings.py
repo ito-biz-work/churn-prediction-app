@@ -31,7 +31,7 @@ SYNTHETIC_DATA_DIR = DATA_DIR / "synthetic"
 BACKEND_DIR = BASE_DIR / "backend"
 ML_MODEL_DIR = BACKEND_DIR / "app" / "ml_models"
 
-MLFLOW_DIR = BASE_DIR / "mlflow"
+MLFLOW_DIR = BASE_DIR / "mlflow_logs"
 ARTIFACT_DIR = MLFLOW_DIR / "artifacts"
 
 # ファイルのパス

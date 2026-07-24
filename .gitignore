@@ -30,4 +30,4 @@ data/raw/
 *.joblib
 
 # MLflow
-mlflow/
+mlflow_logs/
