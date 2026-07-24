@@ -1,13 +1,17 @@
 name: CD (Deploy to S3/CloudFront & ECS)
 
 on:
-  workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # OIDC認証のために必要
+  contents: read  # コードのチェックアウトに必要
 
 env:
   AWS_REGION: ap-northeast-1                        # リージョン
+  AWS_ROLE_ARN: arn:aws:iam::158709926442:role/churn-app-v2-GitHubActions-DeployRole # IAMロールARN
 
   # ECS (バックエンド)
   ECR_REPOSITORY: churn-app-ecr-v2                  # ECRリポジトリ名
@@ -33,8 +37,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       # ECRへのログイン
@@ -122,8 +125,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       # S3への同期（不要な古いファイルを削除する）
