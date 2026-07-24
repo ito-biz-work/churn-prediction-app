@@ -93,9 +93,8 @@ check_synth = synthetic_data.reset_index(drop=True)
 
 # 疑似データに対して、参照した型を適用
 for col, dtype in dtype_map.items():
-    if col in check_synth.columns:
-        if dtype != "object":
-            check_synth[col] = check_synth[col].astype(dtype)
+    if col in check_synth.columns and dtype != "object":
+        check_synth[col] = check_synth[col].astype(dtype)
 
 # 重複チェック
 duplicates = pd.merge(check_real, check_synth, how="inner", on=list(data.columns))

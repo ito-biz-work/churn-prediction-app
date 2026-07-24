@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Literal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -116,4 +116,4 @@ class Customer(BaseSchema):
 
 class CustomerListOutput(BaseSchema):
     total_count: int
-    items: List[Customer]
+    items: list[Customer]
