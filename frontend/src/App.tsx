@@ -41,7 +41,7 @@ function App() {
         textAlign="center"
       >
         <Text fontSize="sm" color="fg.muted">
-          © 2026 Customer Insights System
+          © 2026 Customer Churn Prediction Dashboard
         </Text>
       </Box>
     </Flex>
