@@ -14,7 +14,7 @@ function App() {
       {/* ヘッダー */}
       <Box as="header" bg="cyan.fg" p={3} shadow="md">
         <Heading size="md" color="cyan.contrast" letterSpacing="wide">
-          顧客分析ダッシュボード
+          退会予測ダッシュボード
         </Heading>
       </Box>
 
