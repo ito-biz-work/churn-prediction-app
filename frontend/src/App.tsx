@@ -14,7 +14,7 @@ function App() {
       {/* ヘッダー */}
       <Box as="header" bg="cyan.fg" p={3} shadow="md">
         <Heading size="md" color="cyan.contrast" letterSpacing="wide">
-          顧客分析ダッシュボード
+          退会予測ダッシュボード
         </Heading>
       </Box>
 
@@ -41,7 +41,7 @@ function App() {
         textAlign="center"
       >
         <Text fontSize="sm" color="fg.muted">
-          © 2026 Customer Insights System
+          © 2026 Customer Churn Prediction Dashboard
         </Text>
       </Box>
     </Flex>
