@@ -9,7 +9,6 @@
 [eslint-plugin-react-hooks@7.1.1](https://github.com/facebook/react) - MIT
 [eslint-plugin-react-refresh@0.5.2](https://github.com/arnaudbarre/eslint-plugin-react-refresh) - MIT
 [eslint@10.4.1](https://github.com/eslint/eslint) - MIT
-[frontend@0.0.0](undefined) - UNLICENSED
 [globals@17.6.0](https://github.com/sindresorhus/globals) - MIT
 [next-themes@0.4.6](https://github.com/pacocoursey/next-themes) - MIT
 [react-dom@19.2.7](https://github.com/facebook/react) - MIT
