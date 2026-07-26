@@ -2,6 +2,9 @@
 ### 機械学習による顧客の退会確率予測・シミュレーションアプリ
 
 <!-- アプリの操作動画 -->
+https://github.com/user-attachments/assets/71406533-e598-4c48-a6cd-5a5e106c1106
+
+<br>
 
 ---
 
@@ -32,14 +35,17 @@ Kaggleコンペを参考に独自生成した疑似顧客データと機械学�
 | **バッチ推論**<br>（大量データの一括処理） | 夜間処理等で事前に一括計算し、DBへ保存 | ダッシュボード初期表示時のレスポンス速度向上 |
 | **API推論**<br>（ユーザー操作への即座な応答） | UIのスライダー操作と連携し、オンデマンドで計算 | パラメータ変更に応じたリアルタイムな再計算と画面描画 |
 
----
-
 <br>
+
+---
 
 ## 2. 機械学習モデルの検証と選定プロセス
 
-> 以下のステップで検証・選定を行いました。  
-> 詳細は `notebooks/` フォルダ内のJupyter Notebookにまとめています。
+以下のステップで検証・選定を行いました。  
+詳細は `notebooks/` フォルダ内のJupyter Notebookにまとめています。
+
+<!-- MLflowの画像 -->
+<img width="706" height="171" alt="20260702_CPA_MLflowUI" src="https://github.com/user-attachments/assets/1900a5df-0313-4068-af8d-e4d10daa739b" />
 
 ### ① ベースラインの設定とモデル比較
 不均衡データにおける予測精度を適切に評価するため、段階的なモデル検証を行いました。
@@ -60,8 +66,6 @@ Kaggleコンペを参考に独自生成した疑似顧客データと機械学�
 ### ③ 実験管理
 各モデルのハイパーパラメータや評価メトリクス（Accuracy, AUC等）はローカルの `MLflow` で管理し、再現性と比較の容易性を担保しています。
 
-<!-- MLflowの画像 -->
-
 ### ④ パイプライン化と推論構成
 * **前処理とモデルの一元管理**:  
   前処理と学習済みモデルを `Pipeline` として一括保存することで、推論時の前処理漏れやデータリークを防止しています。
@@ -69,9 +73,9 @@ Kaggleコンペを参考に独自生成した疑似顧客データと機械学�
 * **バッチ / API の両立**:  
   保存したPipelineを活用し、夜間バッチ処理とFastAPI経由のリアルタイム推論の両方に対応させています。
 
----
-
 <br>
+
+---
 
 ## 3. システム構成・技術スタック
 
@@ -135,9 +139,9 @@ flowchart TD
 | **Infrastructure / DevOps** | Docker, Docker Compose, Linux, Git, GitHub Actions (CI/CD) |
 | **AWS** | CloudFront, S3, ALB, ECS, ECR, RDS, Route 53, ACM, Parameter Store, IAM, EventBridge |
 
----
-
 <br>
+
+---
 
 ## 4. 開発・設計のポイント
 
@@ -155,6 +159,8 @@ flowchart TD
 
 * **CI/CD環境とコード品質・テストの自動化**:  
   **GitHub Actions** を構築し、`pytest` による自動テストやリンターチェック、S3/ECR/ECSへのデプロイを自動化。開発効率とシステム品質の維持を両立しています。
+
+<br>
 
 ---
 
@@ -174,9 +180,9 @@ cp frontend/.env.example frontend/.env
 docker compose -f compose.dev.yaml up -d --build
 ```
 
----
-
 <br>
+
+---
 
 ## 6. ライセンス
 
