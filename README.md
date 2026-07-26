@@ -2,7 +2,7 @@
 ### 機械学習による顧客の退会確率予測・シミュレーションアプリ
 
 <!-- アプリの操作動画 -->
-https://github.com/user-attachments/assets/71406533-e598-4c48-a6cd-5a5e106c1106
+https://github.com/user-attachments/assets/20f38c42-944c-4d5b-ba37-757e03138597
 
 <br>
 
