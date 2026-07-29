@@ -17,6 +17,9 @@ https://github.com/user-attachments/assets/20f38c42-944c-4d5b-ba37-757e03138597
 ### アプリの概要
 Kaggleコンペを参考に独自生成した疑似顧客データと機械学習モデルを活用し、各顧客の**退会確率** を可視化・シミュレーションできるダッシュボードを作成しました。
 
+※ 本アプリは Kaggle の [Customer Churn Prediction 2020](https://www.kaggle.com/competitions/customer-churn-prediction-2020) を参考に、独自生成した疑似データを使用しています。  
+規約遵守およびデータの詳細は [LICENSES-BACKEND.md](./LICENSES-BACKEND.md) をご覧ください。
+
 * **顧客一覧（左パネル）**:  
   事前計算（夜間バッチ）した退会確率を含めた顧客情報を一覧で表示します。
 
@@ -111,16 +114,16 @@ flowchart TD
         end
     end
 
-    %% Client Access
-    User --> CF
-    CF --> S3_Web
-    CF --> ALB
-    ALB --> ECS_API
+    %% Client Access & Routing
+    User -->|HTTPS| CF
+    CF -->|"デフォルト (*) : HTTPS"| S3_Web
+    CF -->|"/api/* : HTTPS"| ALB
+    ALB -->|HTTP| ECS_API
 
     %% Batch Trigger
     EB -->|定期起動| ECS_Batch
 
-    %% Model Load (S3_Model -> ECS)
+    %% Model Load
     ECS_API -.->|モデル読み込み| S3_Model
     ECS_Batch -.->|モデル読み込み| S3_Model
 
@@ -179,6 +182,11 @@ cp frontend/.env.example frontend/.env
 # 3. コンテナの起動
 docker compose -f compose.dev.yaml up -d --build
 ```
+
+起動後、ブラウザで以下のURLにアクセスしてください。
+
+* **フロントエンド (React)**: http://localhost:5173
+* **バックエンド APIドキュメント (Swagger UI)**: http://localhost:8000/docs
 
 <br>
 
