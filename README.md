@@ -185,7 +185,8 @@ flowchart TD
 
 ## 5. ローカル開発環境の起動方法
 
-ローカル環境では`Docker Compose` を使用して、バックエンド・フロントエンド・データベースの動作確認が可能です。
+ローカル環境では`Docker Compose` を使用して、バックエンド・フロントエンド・データベースの動作確認が可能です。  
+※ 初回起動時は、依存ライブラリの取得とコンテナイメージの作成が行われます。
 
 ```bash
 # 1. リポジトリのクローンと移動
@@ -203,7 +204,7 @@ docker compose -f compose.dev.yaml up -d --build
 起動後、ブラウザで以下のURLにアクセスしてください。
 
 * **フロントエンド (React)**: http://localhost:5173
-* **バックエンド APIドキュメント (Swagger UI)**: http://localhost:8000/docs
+* **バックエンド APIドキュメント (Swagger UI)**: http://localhost:8000/api/docs
 
 <br>
 
