@@ -194,6 +194,7 @@ cd churn-prediction-app
 
 # 2. 環境変数の準備（テンプレートをコピー）
 cp frontend/.env.example frontend/.env
+cp .env.example .env
 
 # 3. コンテナの起動
 docker compose -f compose.dev.yaml up -d --build
