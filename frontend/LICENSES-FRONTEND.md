@@ -1,23 +1,24 @@
-[@chakra-ui/react@3.35.0](https://github.com/chakra-ui/chakra-ui) - MIT
-[@emotion/react@11.14.0](https://github.com/emotion-js/emotion/tree/main/packages/react) - MIT
-[@eslint/js@10.0.1](https://github.com/eslint/eslint) - MIT
-[@tailwindcss/postcss@4.3.0](https://github.com/tailwindlabs/tailwindcss) - MIT
-[@types/node@24.13.1](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
-[@types/react-dom@19.2.3](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
-[@types/react@19.2.17](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
-[@vitejs/plugin-react@6.0.2](https://github.com/vitejs/vite-plugin-react) - MIT
-[eslint-plugin-react-hooks@7.1.1](https://github.com/facebook/react) - MIT
-[eslint-plugin-react-refresh@0.5.2](https://github.com/arnaudbarre/eslint-plugin-react-refresh) - MIT
-[eslint@10.4.1](https://github.com/eslint/eslint) - MIT
-[globals@17.6.0](https://github.com/sindresorhus/globals) - MIT
-[next-themes@0.4.6](https://github.com/pacocoursey/next-themes) - MIT
-[react-dom@19.2.7](https://github.com/facebook/react) - MIT
-[react-error-boundary@6.1.2](https://github.com/bvaughn/react-error-boundary) - MIT
-[react-icons@5.6.0](https://github.com/react-icons/react-icons) - MIT
-[react-router-dom@7.17.0](https://github.com/remix-run/react-router) - MIT
-[react@19.2.7](https://github.com/facebook/react) - MIT
-[tailwindcss@4.3.0](https://github.com/tailwindlabs/tailwindcss) - MIT
-[typescript-eslint@8.60.1](https://github.com/typescript-eslint/typescript-eslint) - MIT
-[typescript@6.0.3](https://github.com/microsoft/TypeScript) - Apache-2.0
-[vite@8.0.16](https://github.com/vitejs/vite) - MIT
+### 主要ライブラリおよびライセンス (Third-Party Licenses)
 
+- [@chakra-ui/react@3.35.0](https://github.com/chakra-ui/chakra-ui) - MIT
+- [@emotion/react@11.14.0](https://github.com/emotion-js/emotion/tree/main/packages/react) - MIT
+- [@eslint/js@10.0.1](https://github.com/eslint/eslint) - MIT
+- [@tailwindcss/postcss@4.3.0](https://github.com/tailwindlabs/tailwindcss) - MIT
+- [@types/node@24.13.1](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
+- [@types/react-dom@19.2.3](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
+- [@types/react@19.2.17](https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
+- [@vitejs/plugin-react@6.0.2](https://github.com/vitejs/vite-plugin-react) - MIT
+- [eslint-plugin-react-hooks@7.1.1](https://github.com/facebook/react) - MIT
+- [eslint-plugin-react-refresh@0.5.2](https://github.com/arnaudbarre/eslint-plugin-react-refresh) - MIT
+- [eslint@10.4.1](https://github.com/eslint/eslint) - MIT
+- [globals@17.6.0](https://github.com/sindresorhus/globals) - MIT
+- [next-themes@0.4.6](https://github.com/pacocoursey/next-themes) - MIT
+- [react-dom@19.2.7](https://github.com/facebook/react) - MIT
+- [react-error-boundary@6.1.2](https://github.com/bvaughn/react-error-boundary) - MIT
+- [react-icons@5.6.0](https://github.com/react-icons/react-icons) - MIT
+- [react-router-dom@7.17.0](https://github.com/remix-run/react-router) - MIT
+- [react@19.2.7](https://github.com/facebook/react) - MIT
+- [tailwindcss@4.3.0](https://github.com/tailwindlabs/tailwindcss) - MIT
+- [typescript-eslint@8.60.1](https://github.com/typescript-eslint/typescript-eslint) - MIT
+- [typescript@6.0.3](https://github.com/microsoft/TypeScript) - Apache-2.0
+- [vite@8.0.16](https://github.com/vitejs/vite) - MIT
