@@ -132,6 +132,22 @@ flowchart TD
     ECS_Batch --> RDS
 ```
 
+### AWSアーキテクチャ
+
+（※ここに現在のMermaid図）
+
+### インフラ構成の変遷（段階的移行）
+本プロジェクトでは、段階的に構成をアップデートしています。
+
+- **フェーズ1：単一EC2構成（プロトタイプ）**
+  - EC2（1台）上に Docker / Docker Compose を用いて、フロントエンド・バックエンド・DBを一括構築。
+  - 基本的なWebサーバー構築とコンテナ運用の流れを踏襲しました。  
+
+  ※ 当時の設定ファイルは `infra/archive/compose.prd.yaml` に保管
+
+- **フェーズ2：マネージドサービス・マイクロサービス構成（現在）**
+  - 実務でのリアルなサービス運用を意識し、ECS (Fargate)、RDS、S3、CloudFront 等を用いた現在の構成へ移行。
+
 ### 技術スタック
 
 | カテゴリ | 技術要素 |
@@ -140,7 +156,7 @@ flowchart TD
 | **Backend / ML** | Python, FastAPI, Pandas, scikit-learn, MLflow, pytest, Jupyter Notebook |
 | **Database** | PostgreSQL, SQLite |
 | **Infrastructure / DevOps** | Docker, Docker Compose, Linux, Git, GitHub Actions (CI/CD) |
-| **AWS** | CloudFront, S3, ALB, ECS, ECR, RDS, Route 53, ACM, Parameter Store, IAM, EventBridge |
+| **AWS** | CloudFront, S3, ALB, ECS, ECR, RDS, Route 53, ACM, Parameter Store, IAM, EventBridge, (EC2) |
 
 <br>
 
