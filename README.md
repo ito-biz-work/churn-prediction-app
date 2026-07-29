@@ -185,7 +185,8 @@ flowchart TD
 
 ## 5. ローカル開発環境の起動方法
 
-ローカル環境では`Docker Compose` を使用して、バックエンド・フロントエンド・データベースの動作確認が可能です。
+ローカル環境では`Docker Compose` を使用して、バックエンド・フロントエンド・データベースの動作確認が可能です。  
+※ 初回起動時は、依存ライブラリの取得とコンテナイメージの作成が行われます。
 
 ```bash
 # 1. リポジトリのクローンと移動
@@ -194,6 +195,7 @@ cd churn-prediction-app
 
 # 2. 環境変数の準備（テンプレートをコピー）
 cp frontend/.env.example frontend/.env
+cp .env.example .env
 
 # 3. コンテナの起動
 docker compose -f compose.dev.yaml up -d --build
@@ -202,7 +204,7 @@ docker compose -f compose.dev.yaml up -d --build
 起動後、ブラウザで以下のURLにアクセスしてください。
 
 * **フロントエンド (React)**: http://localhost:5173
-* **バックエンド APIドキュメント (Swagger UI)**: http://localhost:8000/docs
+* **バックエンド APIドキュメント (Swagger UI)**: http://localhost:8000/api/docs
 
 <br>
 
@@ -211,8 +213,11 @@ docker compose -f compose.dev.yaml up -d --build
 ## 6. ライセンス
 
 ### 独自コードおよびコンテンツ
-© 2026 ito-biz-work. All rights reserved.  
-本リポジトリに含まれる独自のソースコード、画像、およびドキュメントの無断転載・二次利用・再配布を禁止します。
+本リポジトリのソースコードおよびコンテンツの著作権は ito-biz-work に帰属します。  
+ポートフォリオとしての閲覧を目的として公開しているため、コードの複製・再配布・二次利用はご遠慮ください。  
+また、外部からの Issue や Pull Request の受付・マージは原則行っておりません。あらかじめご了承ください。
+
+© 2026 ito-biz-work. All rights reserved.
 
 ### サードパーティ製ライブラリ
 本プロジェクトで使用している外部ライブラリ・依存パッケージのライセンス情報については、以下のファイルをご参照ください。
