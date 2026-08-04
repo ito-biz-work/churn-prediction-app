@@ -35,6 +35,10 @@ packages = { find = {} }
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+filterwarnings = [
+    # 外部ライブラリ由来の非推奨警告や警告を非表示にする
+    "ignore:.*testclient.*:",
+]
 
 [tool.ruff.lint]
 ignore = [
