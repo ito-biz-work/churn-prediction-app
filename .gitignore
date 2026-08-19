@@ -31,3 +31,6 @@ data/raw/
 
 # MLflow
 mlflow_logs/
+
+# Infra
+cdk.out/
