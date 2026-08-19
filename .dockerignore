@@ -45,3 +45,10 @@ node_modules/
 .vscode/
 .idea/
 .DS_Store
+
+# ==========================================
+# Infrastructure (CDK)
+# ==========================================
+infra/
+cdk.out/
+cdk.*
