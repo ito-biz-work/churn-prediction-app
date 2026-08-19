@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_ec2 as ec2,
     aws_rds as rds,
     aws_s3 as s3,
+    aws_ssm as ssm,
 )
 from constructs import Construct
 
@@ -90,4 +91,20 @@ class DataStack(Stack):
             allocated_storage=20,
             max_allocated_storage=100,
             removal_policy=RemovalPolicy.RETAIN,
+        )
+
+        # ==========================================
+        # パラメータストア（SSM）
+        # ==========================================
+        ssm.StringParameter(
+            self,
+            "ChurnAppCdkDatabaseUrlParameter",
+            parameter_name="/churn-app-cdk/database-url",
+            string_value=self.rds_instance.db_instance_endpoint_address,
+        )
+        ssm.StringParameter(
+            self,
+            "ChurnAppCdkModelBucketNameParameter",
+            parameter_name="/churn-app-cdk/s3-ml-bucket-name",
+            string_value=self.model_bucket.bucket_name,
         )
