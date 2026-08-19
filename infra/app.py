@@ -1,14 +1,15 @@
 import os
 
 import aws_cdk as cdk
-from stack import InfraStack
+
+from infra.stacks.data_stack import DataStack
 
 app = cdk.App()
 
-# スタックの作成
-InfraStack(
+# データスタックの作成
+DataStack(
     app,
-    "InfraStack",
+    "DataStack",
     env=cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],

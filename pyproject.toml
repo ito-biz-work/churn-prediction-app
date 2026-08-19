@@ -46,3 +46,6 @@ filterwarnings = [
 ignore = [
     "B008", # FastAPIの Depends / Query におけるデフォルト値指定を許可
 ]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
