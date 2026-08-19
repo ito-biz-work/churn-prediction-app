@@ -2,6 +2,7 @@ from aws_cdk import (
     RemovalPolicy,
     Stack,
     aws_ec2 as ec2,
+    aws_rds as rds,
     aws_s3 as s3,
 )
 from constructs import Construct
@@ -54,5 +55,39 @@ class DataStack(Stack):
             self,
             "ChurnAppCdkModelBucket",
             block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+            removal_policy=RemovalPolicy.RETAIN,
+        )
+
+        # ==========================================
+        # データストア（RDS）
+        # ==========================================
+        # セキュリティグループの作成
+        self.rds_sg = ec2.SecurityGroup(
+            self,
+            "ChurnAppCdkRdsSecurityGroup",
+            vpc=self.vpc,
+            description="Security group for RDS",
+            allow_all_outbound=True,
+        )
+
+        # RDSインスタンスの作成
+        self.rds_instance = rds.DatabaseInstance(
+            self,
+            "ChurnAppCdkRdsInstance",
+            engine=rds.DatabaseInstanceEngine.postgres(
+                version=rds.PostgresEngineVersion.VER_18_4
+            ),
+            instance_type=ec2.InstanceType.of(
+                ec2.InstanceClass.BURSTABLE4_GRAVITON, ec2.InstanceSize.MICRO
+            ),
+            vpc=self.vpc,
+            vpc_subnets=ec2.SubnetSelection(
+                subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS
+            ),
+            security_groups=[self.rds_sg],
+            database_name="churn",
+            credentials=rds.Credentials.from_generated_secret("churn_admin"),
+            allocated_storage=20,
+            max_allocated_storage=100,
             removal_policy=RemovalPolicy.RETAIN,
         )
