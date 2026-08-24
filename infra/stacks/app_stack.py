@@ -102,3 +102,20 @@ class AppStack(Stack):
         data_stack.model_bucket.grant_read_write(
             fargate_service.task_definition.task_role
         )
+
+        # ==========================================
+        # ロードバランサー（ALB）
+        # ==========================================
+        # ALBの作成とターゲットグループの設定
+        alb = elb.ApplicationLoadBalancer(
+            self,
+            "ChurnAppCdkALB",
+            vpc=data_stack.vpc,
+            internet_facing=True,
+        )
+        listener = alb.add_listener("ChurnAppCdkListener", port=80)
+        listener.add_targets(
+            "ChurnAppCdkTarget",
+            port=8000,
+            targets=[fargate_service],
+        )
