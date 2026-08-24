@@ -74,8 +74,8 @@ class AppStack(Stack):
             image=ecs.ContainerImage.from_ecr_repository(backend_repo, tag="latest"),
             port_mappings=[ecs.PortMapping(container_port=8000)],
             environment={
-                "DB_HOST": data_stack.rds_instance.db_instance_endpoint_address,
-                "MODEL_BUCKET_NAME": data_stack.model_bucket.bucket_name,
+                "DATABASE_URL": data_stack.rds_instance.db_instance_endpoint_address,
+                "S3_BUCKET_NAME": data_stack.model_bucket.bucket_name,
             },
         )
 
