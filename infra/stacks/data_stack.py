@@ -28,7 +28,7 @@ class DataStack(Stack):
                 ),
                 ec2.SubnetConfiguration(
                     name="private",
-                    subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS,
+                    subnet_type=ec2.SubnetType.PRIVATE_WITH_ISOLATED,
                     cidr_mask=24,
                 ),
             ],
@@ -40,7 +40,7 @@ class DataStack(Stack):
         )
 
         # ==========================================
-        # ストレージ
+        # ストレージ（S3）
         # ==========================================
         # フロントエンド静的ファイル用S3バケットの作成
         self.frontend_bucket = s3.Bucket(
