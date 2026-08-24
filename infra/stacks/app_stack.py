@@ -1,6 +1,10 @@
 from aws_cdk import (
+    RemovalPolicy,
     Stack,
     aws_ec2 as ec2,
+    aws_ecr as ecr,
+    aws_ecs as ecs,
+    aws_elasticloadbalancingv2 as elb,
 )
 from constructs import Construct
 
@@ -35,3 +39,66 @@ class AppStack(Stack):
                 destination_cidr_block="0.0.0.0/0",
                 nat_gateway_id=nat_gateway.ref,
             )
+
+        # ==========================================
+        # コンテナ基盤（ECS / ECR）
+        # ==========================================
+        # ECSクラスタの作成
+        cluster = ecs.Cluster(
+            self,
+            "ChurnAppCdkCluster",
+            vpc=data_stack.vpc,
+        )
+
+        # ECRリポジトリの作成
+        backend_repo = ecr.Repository(
+            self,
+            "ChurnAppCdkBackendRepo",
+            repository_name="churn-app-backend",
+            removal_policy=RemovalPolicy.DESTROY,
+            auto_delete_images=True,
+        )
+
+        # ==========================================
+        # アプリケーション（Fargate）
+        # ==========================================
+        # タスク定義
+        task_definition = ecs.FargateTaskDefinition(
+            self,
+            "ChurnAppCdkTaskDef",
+            cpu=256,
+            memory_limit_mib=512,
+        )
+        task_definition.add_container(
+            "ChurnAppCdkContainer",
+            image=ecs.ContainerImage.from_ecr_repository(backend_repo, tag="latest"),
+            port_mappings=[ecs.PortMapping(container_port=8000)],
+            environment={
+                "DB_HOST": data_stack.rds_instance.db_instance_endpoint_address,
+                "MODEL_BUCKET_NAME": data_stack.model_bucket.bucket_name,
+            },
+        )
+
+        # Fargateサービスの作成
+        fargate_service = ecs.FargateService(
+            self,
+            "ChurnAppCdkFargateService",
+            cluster=cluster,
+            task_definition=task_definition,
+            desired_count=1,
+            vpc_subnets=ec2.SubnetSelection(
+                subnet_type=ec2.SubnetType.PRIVATE_ISOLATED
+            ),
+        )
+
+        # FargateサービスからRDSへのセキュリティグループ通信許可（インバウンドルール）
+        data_stack.rds_sg.add_ingress_rule(
+            peer=fargate_service.connections.security_groups[0],
+            connection=ec2.Port.tcp(5432),
+            description="Allow Fargate service to access RDS",
+        )
+
+        # モデル用S3バケットへの読み書き権限（IAM）をFargateタスクに付与
+        data_stack.model_bucket.grant_read_write(
+            fargate_service.task_definition.task_role
+        )
