@@ -106,14 +106,21 @@ class AppStack(Stack):
         # ==========================================
         # ロードバランサー（ALB）
         # ==========================================
-        # ALBの作成とターゲットグループの設定
+        # ALBの作成
         alb = elb.ApplicationLoadBalancer(
             self,
             "ChurnAppCdkALB",
             vpc=data_stack.vpc,
             internet_facing=True,
         )
-        listener = alb.add_listener("ChurnAppCdkListener", port=80)
+        # ALBのリスナー
+        listener = alb.add_listener(
+            "ChurnAppCdkListener",
+            port=443,
+            certificates=[data_stack.alb_certificate],  # ACM証明書を指定
+        )
+
+        # ターゲットグループの紐づけ
         listener.add_targets(
             "ChurnAppCdkTarget",
             port=8000,
